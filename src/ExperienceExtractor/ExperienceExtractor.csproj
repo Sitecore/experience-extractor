@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{86510453-48E1-40D6-9AB4-810E9E570833}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ExperienceExtractor</RootNamespace>
+    <AssemblyName>ExperienceExtractor</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CsvHelper">
+      <HintPath>..\packages\CsvHelper.2.8.4\lib\net40-client\CsvHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AnalysisServices, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\components\Microsoft.AnalysisServices.DLL</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\components\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Analytics">
+      <HintPath>..\components\Sitecore.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Analytics.Aggregation">
+      <HintPath>..\components\Sitecore.Analytics.Aggregation.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Analytics.Core">
+      <HintPath>..\components\Sitecore.Analytics.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Analytics.DataAccess">
+      <HintPath>..\components\Sitecore.Analytics.DataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Analytics.Model">
+      <HintPath>..\components\Sitecore.Analytics.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Analytics.MongoDB">
+      <HintPath>..\packages\Sitecore.Binaries.Analytics.8.0.0.141119\lib\Sitecore.Analytics.MongoDB.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.ExperienceAnalytics">
+      <HintPath>..\components\Sitecore.ExperienceAnalytics.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Kernel">
+      <HintPath>..\components\Sitecore.Kernel.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\components\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\components\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\components\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Api\Http\Configuration\ExperienceExtractorWebApiConfig.cs" />
+    <Compile Include="Api\Http\Controllers\ExperienceExtractorJobsController.cs" />
+    <Compile Include="Api\Http\Controllers\ExperienceExtractorJobResultsController.cs" />
+    <Compile Include="Api\Http\Controllers\ExperienceExtractorMetaDataController.cs" />
+    <Compile Include="Api\Http\RequireSitecoreLoginAttribute.cs" />
+    <Compile Include="Api\Jobs\IJobRepository.cs" />
+    <Compile Include="Api\Jobs\JobInfo.cs" />
+    <Compile Include="Api\Jobs\ExperienceExtractor.cs" />
+    <Compile Include="Api\Jobs\JobExecutionSettings.cs" />
+    <Compile Include="Api\Jobs\JobStatus.cs" />
+    <Compile Include="Api\Jobs\LocalJobRepository.cs" />
+    <Compile Include="Api\Parsing\ParseFactoryParameterAttribute.cs" />
+    <Compile Include="Api\Pipelines\ExperienceExtractorApiInitializer.cs" />
+    <Compile Include="Api\Pipelines\XmlConfigHelpers.cs" />
+    <Compile Include="Export\CsvExporter.cs" />
+    <Compile Include="Export\CsvTableData.cs" />
+    <Compile Include="Export\DataTableHelpers.cs" />
+    <Compile Include="Export\ITableDataBatchWriter.cs" />
+    <Compile Include="Export\ITableDataExporter.cs" />
+    <Compile Include="Export\ITableDataWriter.cs" />
+    <Compile Include="Export\ITablePartitionSource.cs" />
+    <Compile Include="Export\MergedTableData.cs" />
+    <Compile Include="Export\TableDataBatchWriter.cs" />
+    <Compile Include="Export\TablePartition.cs" />
+    <Compile Include="Mapping\ILabelProvider.cs" />
+    <Compile Include="Mapping\ItemDatabaseFieldLookup.cs" />
+    <Compile Include="Mapping\LabeledFieldMapper.cs" />
+    <Compile Include="Api\Parsing\ParseFactoryAttribute.cs" />
+    <Compile Include="Api\Parsing\JobParser.cs" />
+    <Compile Include="Api\Parsing\ParseException.cs" />
+    <Compile Include="Api\Parsing\ParseState.cs" />
+    <Compile Include="Mapping\IItemFieldLookup.cs" />
+    <Compile Include="Processing\DataSources\DataSourceBase.cs" />
+    <Compile Include="Processing\DateTime\DateRangeFilter.cs" />
+    <Compile Include="Processing\Labels\LabelLoader.cs" />
+    <Compile Include="Mapping\Splitting\MatrixTableMapper.cs" />
+    <Compile Include="Mapping\Splitting\MatrixTypes.cs" />
+    <Compile Include="Mapping\Splitting\SequenceFieldMapper.cs" />
+    <Compile Include="Mapping\Splitting\SequenceType.cs" />
+    <Compile Include="Mapping\Tables.cs" />
+    <Compile Include="Processing\ITableDataPostProcessor.cs" />
+    <Compile Include="Api\Parsing\IParseFactory.cs" />
+    <Compile Include="Api\Jobs\Job.cs" />
+    <Compile Include="Api\Parsing\JsonJobParser.cs" />
+    <Compile Include="Api\Jobs\IJobSpecification.cs" />
+    <Compile Include="Api\Parsing\ParseFactories.cs" />
+    <Compile Include="Api\Parsing\JsonParseState.cs" />
+    <Compile Include="Api\Parsing\ReflectionHelpers.cs" />
+    <Compile Include="Mapping\TableDefinition.cs" />
+    <Compile Include="Mapping\TableMapperBase.cs" />
+    <Compile Include="Processing\ArrayMap.cs" />
+    <Compile Include="Processing\DateTime\ISequenceMapper.cs" />
+    <Compile Include="Processing\DateTime\SequenceTableDataBuilder.cs" />
+    <Compile Include="Processing\FieldMapperIterator.cs" />
+    <Compile Include="Processing\DataSources\IDataSource.cs" />
+    <Compile Include="Processing\Helpers\Indexed.cs" />
+    <Compile Include="Processing\Keys\Fnv1a32.cs" />
+    <Compile Include="Processing\Keys\Fnv1a64.cs" />
+    <Compile Include="Processing\Keys\IKeyFactory.cs" />
+    <Compile Include="Processing\Keys\KeyFactoryBase.cs" />
+    <Compile Include="Processing\Labels\LruCache.cs" />
+    <Compile Include="Processing\Helpers\DisposeActionWrapper.cs" />
+    <Compile Include="Processing\ProcessingScope.cs" />
+    <Compile Include="Mapping\Splitting\SplittingFieldMapper.cs" />
+    <Compile Include="Processing\IDeferedValue.cs" />
+    <Compile Include="Data\RowComparer.cs" />
+    <Compile Include="Mapping\Splitting\SimpleSplitter.cs" />
+    <Compile Include="Mapping\Splitting\ISplitter.cs" />
+    <Compile Include="Mapping\Splitting\SplittingTableMapper.cs" />
+    <Compile Include="Processing\DataProcessor.cs" />
+    <Compile Include="Data\Schema\Field.cs" />
+    <Compile Include="Mapping\FieldMapperBase.cs" />
+    <Compile Include="Mapping\FieldMapperSet.cs" />
+    <Compile Include="Data\Schema\FieldType.cs" />
+    <Compile Include="Mapping\MappingHelpers.cs" />
+    <Compile Include="Mapping\IFieldMapper.cs" />
+    <Compile Include="Mapping\ITableMapper.cs" />
+    <Compile Include="Processing\Keys\KeyFactory.cs" />
+    <Compile Include="Mapping\Dimension.cs" />
+    <Compile Include="Data\Schema\RelationType.cs" />
+    <Compile Include="Mapping\SimpleFieldMapper.cs" />
+    <Compile Include="Mapping\SimpleTableMapper.cs" />
+    <Compile Include="Data\Schema\SortOrder.cs" />
+    <Compile Include="Data\TableData.cs" />
+    <Compile Include="Processing\TableDataBuilder.cs" />
+    <Compile Include="Data\TableDataReader.cs" />
+    <Compile Include="Processing\TableMap.cs" />
+    <Compile Include="Mapping\Time\DateDetailLevel.cs" />
+    <Compile Include="Mapping\Time\DateDimension.cs" />
+    <Compile Include="Mapping\Time\TimeDetailLevel.cs" />
+    <Compile Include="Mapping\Time\TimeDimension.cs" />
+    <Compile Include="Data\Schema\TableDataSchema.cs" />
+    <Compile Include="Data\Schema\TableDataRelation.cs" />
+    <Compile Include="Processing\DataSources\TypedDataFilter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Processing\Helpers\CollectionHelpers.cs" />
+    <Compile Include="Processing\DataSources\IDataFilter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="ExperienceExtractor.licenseheader" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="obj\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

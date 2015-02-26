@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceExtractor", "ExperienceExtractor\ExperienceExtractor.csproj", "{86510453-48E1-40D6-9AB4-810E9E570833}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C97528D3-C3D7-4DD3-A827-58F1F5DE7E88}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceExtractor.Tests", "ExperienceExtractor.Tests\ExperienceExtractor.Tests.csproj", "{9F5AF20E-494B-48B0-8B54-5BBD14260646}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceExtractor.MongoDb", "ExperienceExtractor.MongoDb\ExperienceExtractor.MongoDb.csproj", "{EFB2F971-0F79-47D0-A9BC-62FD0C3443C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceExtractor.Components", "ExperienceExtractor.Components\ExperienceExtractor.Components.csproj", "{42E7629E-E63C-4927-9EFA-BEBFFDBD4AB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceExtractor.BuildPackage", "ExperienceExtractor.BuildPackage\ExperienceExtractor.BuildPackage.csproj", "{063E71F8-EA78-44F7-A6F7-453E13D956E0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{73183030-DE6B-4E0D-B6F1-92BBCCAA1B83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceExtractor.Client", "ExperienceExtractor.Client\ExperienceExtractor.Client.csproj", "{7DD3C4FF-2CAD-4E33-A6AE-4032B63B291A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{86510453-48E1-40D6-9AB4-810E9E570833}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86510453-48E1-40D6-9AB4-810E9E570833}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86510453-48E1-40D6-9AB4-810E9E570833}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86510453-48E1-40D6-9AB4-810E9E570833}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F5AF20E-494B-48B0-8B54-5BBD14260646}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F5AF20E-494B-48B0-8B54-5BBD14260646}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F5AF20E-494B-48B0-8B54-5BBD14260646}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F5AF20E-494B-48B0-8B54-5BBD14260646}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFB2F971-0F79-47D0-A9BC-62FD0C3443C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFB2F971-0F79-47D0-A9BC-62FD0C3443C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFB2F971-0F79-47D0-A9BC-62FD0C3443C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFB2F971-0F79-47D0-A9BC-62FD0C3443C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42E7629E-E63C-4927-9EFA-BEBFFDBD4AB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42E7629E-E63C-4927-9EFA-BEBFFDBD4AB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42E7629E-E63C-4927-9EFA-BEBFFDBD4AB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42E7629E-E63C-4927-9EFA-BEBFFDBD4AB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{063E71F8-EA78-44F7-A6F7-453E13D956E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{063E71F8-EA78-44F7-A6F7-453E13D956E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{063E71F8-EA78-44F7-A6F7-453E13D956E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{063E71F8-EA78-44F7-A6F7-453E13D956E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DD3C4FF-2CAD-4E33-A6AE-4032B63B291A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DD3C4FF-2CAD-4E33-A6AE-4032B63B291A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DD3C4FF-2CAD-4E33-A6AE-4032B63B291A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DD3C4FF-2CAD-4E33-A6AE-4032B63B291A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{063E71F8-EA78-44F7-A6F7-453E13D956E0} = {73183030-DE6B-4E0D-B6F1-92BBCCAA1B83}
+	EndGlobalSection
+EndGlobal

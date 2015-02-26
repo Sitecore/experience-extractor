@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{42E7629E-E63C-4927-9EFA-BEBFFDBD4AB1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ExperienceExtractor.Components</RootNamespace>
+    <AssemblyName>ExperienceExtractor.Components</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Sitecore.Analytics">
+      <HintPath>..\components\Sitecore.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Analytics.Aggregation">
+      <HintPath>..\components\Sitecore.Analytics.Aggregation.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Analytics.Model">
+      <HintPath>..\components\Sitecore.Analytics.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.ExperienceAnalytics">
+      <HintPath>..\components\Sitecore.ExperienceAnalytics.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Kernel">
+      <HintPath>..\components\Sitecore.Kernel.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Mapping\Sitecore\RulesFilter.cs" />
+    <Compile Include="Mapping\Sitecore\XaFieldMapper.cs" />
+    <Compile Include="Mapping\Sitecore\XaLabelProvider.cs" />
+    <Compile Include="Mapping\Sitecore\XaTableMapper.cs" />
+    <Compile Include="Mapping\Sitecore\XaFacts.cs" />
+    <Compile Include="Mapping\Sitecore\XaHelpers.cs" />
+    <Compile Include="Mapping\Sitecore\FactsMapper.cs" />
+    <Compile Include="Mapping\Sitecore\ItemDatabaseFieldLookup.cs" />
+    <Compile Include="Mapping\Sitecore\SitecoreFieldLabelProvider.cs" />
+    <Compile Include="Mapping\Splitting\MvTestFieldMapper.cs" />
+    <Compile Include="Mapping\Splitting\MvTestSplitter.cs" />
+    <Compile Include="Mapping\Splitting\PageConditionSplitter.cs" />
+    <Compile Include="Parsing\Fields\CountFieldFactory.cs" />
+    <Compile Include="Parsing\Fields\DateFieldFactory.cs" />
+    <Compile Include="Parsing\Fields\DateTimeFieldFactoryBase.cs" />
+    <Compile Include="Parsing\Fields\DimensionFactory.cs" />
+    <Compile Include="Parsing\Fields\XaFactoryHelpers.cs" />
+    <Compile Include="Parsing\Fields\XaFactsFieldFactory.cs" />
+    <Compile Include="Parsing\Fields\XaFieldFactory.cs" />
+    <Compile Include="Parsing\Fields\FactFieldsFactory.cs" />
+    <Compile Include="Parsing\Fields\IndexFieldFactory.cs" />
+    <Compile Include="Parsing\Fields\MvTestFieldsFactory.cs" />
+    <Compile Include="Parsing\Fields\SequenceFieldMapper.cs" />
+    <Compile Include="Parsing\Fields\SplitMapperFactory.cs" />
+    <Compile Include="Parsing\Fields\StaticFieldFactory.cs" />
+    <Compile Include="Parsing\Fields\TimeFieldFactory.cs" />
+    <Compile Include="Parsing\Fields\TypedFieldFactories.cs" />
+    <Compile Include="Parsing\Filters\RulesFilterFactory.cs" />
+    <Compile Include="Parsing\Helpers\Selectors.cs" />
+    <Compile Include="Parsing\PostProcessors\AccessPostProcessorFactory.cs" />
+    <Compile Include="Parsing\PostProcessors\EdmFactory.cs" />
+    <Compile Include="Parsing\PostProcessors\MsSqlFactory.cs" />
+    <Compile Include="Parsing\Splitters\PageConditionSplitterFactories.cs" />
+    <Compile Include="Parsing\Tables\DefaultTableFactory.cs" />
+    <Compile Include="Parsing\Tables\XaTableFactory.cs" />
+    <Compile Include="Parsing\Tables\MatrixFactory.cs" />
+    <Compile Include="PostProcessors\AccessExporter.cs" />
+    <Compile Include="PostProcessors\EdmSchemaBuilder.cs" />
+    <Compile Include="PostProcessors\SqlExporter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExperienceExtractor\ExperienceExtractor.csproj">
+      <Project>{86510453-48e1-40d6-9ab4-810e9e570833}</Project>
+      <Name>ExperienceExtractor</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\ExperienceExtractor\ExperienceExtractor.licenseheader">
+      <Link>ExperienceExtractor.licenseheader</Link>
+    </None>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Empty.accdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

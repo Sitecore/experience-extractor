@@ -45,8 +45,8 @@ namespace ExperienceExtractor.Processing.DateTime
         protected virtual bool SetValues(TKey key, object[] data)
         {
             _seen.Add(key);
-            if (Equals(Min, null) || _comparer.Compare(Min, key) < 0) Min = key;
-            if (Equals(Max, null) || _comparer.Compare(key, Max) < 0) Max = key;
+            if (Equals(Min, null) || _comparer.Compare(key, Min) < 0) Min = key;
+            if (Equals(Max, null) || _comparer.Compare(Max, key) < 0) Max = key;
 
             return Iterator.Apply(data, (mapper, target) => ((ISequenceMapper<TKey>)mapper).SetValues(key, target));
         }

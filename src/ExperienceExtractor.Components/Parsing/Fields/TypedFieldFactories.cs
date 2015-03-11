@@ -94,7 +94,7 @@ namespace ExperienceExtractor.Components.Parsing.Fields
             {
                 var selector = state.TryGet("Select", DefaultPath, true);
 
-                if (selector.StartsWith(":"))
+                if (selector.StartsWith("/"))
                 {
                     selector = DefaultPath + selector;
                 }

@@ -51,7 +51,7 @@ namespace ExperienceExtractor.Api.Parsing
         {
             if (typeof (TValue).IsEnum)
             {
-                var stringValue = TryGet<string>(attribute);
+                var stringValue = TryGet<string>(attribute, mainParameter: mainParameter);
                 if (stringValue == null)
                 {
                     return defaultValue();

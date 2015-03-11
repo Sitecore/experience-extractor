@@ -169,7 +169,7 @@ namespace ExperienceExtractor.Components.PostProcessors
             {typeof (bool), "bit"},
             {typeof (string), "nvarchar"},
             {typeof (DateTime), "datetime2"},
-            {typeof (decimal), "decimal"},
+            {typeof (decimal), "decimal(18,2)"},
             {typeof (float), "float"},
             {typeof (int), "int"},
             {typeof (Guid), "uniqueidentifier"},

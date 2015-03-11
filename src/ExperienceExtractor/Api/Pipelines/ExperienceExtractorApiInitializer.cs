@@ -110,7 +110,7 @@ namespace ExperienceExtractor.Api.Pipelines
                     }
                 }
 
-                foreach (var path in exportNode.SelectNodes("itemRoots").OrEmpty().OfType<XmlElement>())
+                foreach (var path in exportNode.SelectNodes("itemRoots/*").OrEmpty().OfType<XmlElement>())
                 {
                     ExperienceExtractorApiContainer.ItemPaths[path.Name] = path.InnerText.Trim();
                 }

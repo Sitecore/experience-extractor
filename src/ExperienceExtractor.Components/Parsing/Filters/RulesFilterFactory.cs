@@ -15,7 +15,9 @@ using ExperienceExtractor.Api.Parsing;
 using ExperienceExtractor.Components.Mapping.Sitecore;
 using ExperienceExtractor.Processing.DataSources;
 using ExperienceExtractor.Processing.Helpers;
+using Sitecore.Analytics.Pipelines.CreateVisits;
 using Sitecore.Data;
+using Sitecore.Data.Items;
 using Sitecore.Data.Managers;
 using Sitecore.Rules;
 
@@ -38,6 +40,7 @@ namespace ExperienceExtractor.Components.Parsing.Filters
             }
 
             var ruleItem = state.Require<string>("Item", true);
+            Item item;
             ID id;
             if (!ID.TryParse(ruleItem, out id))
             {
@@ -45,16 +48,21 @@ namespace ExperienceExtractor.Components.Parsing.Filters
                 {
                     var rootItem =
                         state.Parser.Database.GetItem(
-                        ExperienceExtractorApiContainer.ItemPaths.GetOrDefault("experienceAnalyticsFilters") ??
-                            "/sitecore/system/Marketing Control Panel/Experience Analytics/Dimensions");
+                            ExperienceExtractorApiContainer.ItemPaths.GetOrDefault("experienceAnalyticsFilters") ??
+                            "/sitecore/system/Marketing Control Panel/Experience Analytics/Filters");
 
-                    ruleItem = rootItem.Paths.FullPath + "/" + rootItem;
+                    ruleItem = rootItem.Paths.FullPath + "/" + ruleItem;
                 }
-                id = ItemManager.ResolvePath(ruleItem, parser.Database);
+
+
+                item = parser.Database.GetItem(ruleItem, parser.DefaultLanguage);
+            }
+            else
+            {
+                item = parser.Database.GetItem(id, parser.DefaultLanguage);    
             }
 
-
-            var item = parser.Database.GetItem(id, parser.DefaultLanguage);
+            
             if (item == null)
             {
                 throw ParseException.AttributeError(state, string.Format("Rule item not found '{0}'", ruleItem));

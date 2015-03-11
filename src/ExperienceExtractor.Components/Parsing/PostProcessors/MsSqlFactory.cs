@@ -27,7 +27,8 @@ namespace ExperienceExtractor.Components.Parsing.PostProcessors
     {
         public ITableDataPostProcessor Parse(JobParser parser, ParseState state)
         {
-            var connectionString = state.Require<string>("Connection", true);
+            var defaultConnection = ConfigurationManager.ConnectionStrings["ExperienceExtractorDump"];
+            var connectionString =  defaultConnection == null ? state.Require<string>("Connection", true) : defaultConnection.ConnectionString;
             if (!connectionString.Contains("="))
             {
                 connectionString = ConfigurationManager.ConnectionStrings[connectionString].ConnectionString;

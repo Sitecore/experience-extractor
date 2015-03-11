@@ -58,12 +58,15 @@ namespace ExperienceExtractor.Components.Parsing.Splitters
 
 
         [ParseFactory("page", "Page", "What happened before/after a specific page"),
-            ParseFactoryParameter("PageId", typeof(Guid), "The page to split by. If omitted it is taken from context assuming a page in scope", isMainParameter: true)]
+            ParseFactoryParameter("PageId", typeof(Guid), "The page to split by. If omitted it is taken from context assuming a page in scope", isMainParameter: true),
+            ParseFactoryParameter("IncludePage", typeof(Guid), "If true the page is included in the 'After' metrics, otherwise the 'Before' metrics include the visit to the page.")]
         public class PageSplitterFactory : IParseFactory<ISplitter>, IParseFactory<IDataFilter>
         {
             public ISplitter Parse(JobParser parser, ParseState state)
             {
                 var pageIdString = state.TryGet<string>("PageId", mainParameter: true);
+
+                var includeSelf = state.TryGet("IncludePage", false);
 
                 var pageId = pageIdString != null ? Guid.Parse(pageIdString) : (Guid?)null;
 
@@ -89,7 +92,7 @@ namespace ExperienceExtractor.Components.Parsing.Splitters
                     }
 
                     return thisPageId.HasValue && page.Item.Id == thisPageId;
-                });
+                }, includeMatchBefore: !includeSelf);
             }
 
             IDataFilter IParseFactory<IDataFilter>.Parse(JobParser parser, ParseState state)

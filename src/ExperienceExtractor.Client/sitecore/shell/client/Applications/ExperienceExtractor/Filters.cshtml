@@ -1,0 +1,50 @@
+@**********************************************************************************************
+     Copyright 2015 Sitecore Corporation A/S
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+    except in compliance with the License. You may obtain a copy of the License at
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software distributed under the
+    License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+    either express or implied. See the License for the specific language governing permissions
+    and limitations under the License.
+    ***********************************************************************************************@
+@model RenderingModel
+
+@using Sitecore.Mvc
+@using Sitecore.Mvc.Presentation
+@using Sitecore.Web.UI.Controls.Common.UserControls
+@using Sitecore.Web.UI.Controls.Common.Renderings
+@using ExperienceExtractor.Api.Http.Configuration
+@{
+	var rendering = this.Html.Sitecore().Controls().GetUserControl(this.Model.Rendering);
+	var renderingId = rendering.ControlId;	
+	rendering.Requires.Script("client", "ExperienceExtractorFilters.js");
+	
+	rendering.Class = "sc-experience-extractor sc-experience-extractor-filters";	
+}
+<div @rendering.HtmlAttributes>	  
+  <div class='row'>
+	  <div class="col-md-1"><span class='big-label'>From date</span></div>
+	  <div class='col-md-2'>		
+		@Html.Sitecore().Controls().Rendering(Html, "{3CAC8515-EA11-4B97-A1E5-546DC6FC5E59}", renderingId + "FromDate", "", new { })
+	  </div>
+	  <div class="col-md-1"><span class='big-label'>To date</span></div>
+	  <div class='col-md-2'>		
+		@Html.Sitecore().Controls().Rendering(Html, "{3CAC8515-EA11-4B97-A1E5-546DC6FC5E59}", renderingId + "ToDate", "", new { })
+	  </div>
+   </div>  
+   <div class="row">
+		<div class="col-md-6"><span class='big-label'>Sampling</span></div>
+   </div>
+   <div class="row">
+		<div class="col-md-6">
+			@Html.Sitecore().Controls().Rendering(Html, "{7E49DE99-146A-4F62-8555-A731AAB7427B}", renderingId + "Sampling", "", new { Minimum=10, Maximum=100, Step=10, TitleValueSuffix=" %", SelectedValue=30 })			
+		</div>
+   </div>
+   
+   <form method="post" action="/sitecore/admin/experienceextractor/shell.aspx#yaml" target="ExperienceExtractorShell">
+		<input type="hidden" name="job" value="" />	  
+		<button type="submit" class='btn btn-primary execute-button'>Update shell</button>
+	</form>
+</div>             

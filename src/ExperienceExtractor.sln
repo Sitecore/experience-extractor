@@ -18,10 +18,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceExtractor.MongoDb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceExtractor.Components", "ExperienceExtractor.Components\ExperienceExtractor.Components.csproj", "{42E7629E-E63C-4927-9EFA-BEBFFDBD4AB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceExtractor.BuildPackage", "ExperienceExtractor.BuildPackage\ExperienceExtractor.BuildPackage.csproj", "{063E71F8-EA78-44F7-A6F7-453E13D956E0}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{73183030-DE6B-4E0D-B6F1-92BBCCAA1B83}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceExtractor.Client", "ExperienceExtractor.Client\ExperienceExtractor.Client.csproj", "{7DD3C4FF-2CAD-4E33-A6AE-4032B63B291A}"
 EndProject
 Global
@@ -46,10 +42,6 @@ Global
 		{42E7629E-E63C-4927-9EFA-BEBFFDBD4AB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42E7629E-E63C-4927-9EFA-BEBFFDBD4AB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42E7629E-E63C-4927-9EFA-BEBFFDBD4AB1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{063E71F8-EA78-44F7-A6F7-453E13D956E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{063E71F8-EA78-44F7-A6F7-453E13D956E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{063E71F8-EA78-44F7-A6F7-453E13D956E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{063E71F8-EA78-44F7-A6F7-453E13D956E0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7DD3C4FF-2CAD-4E33-A6AE-4032B63B291A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7DD3C4FF-2CAD-4E33-A6AE-4032B63B291A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DD3C4FF-2CAD-4E33-A6AE-4032B63B291A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,8 +49,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{063E71F8-EA78-44F7-A6F7-453E13D956E0} = {73183030-DE6B-4E0D-B6F1-92BBCCAA1B83}
 	EndGlobalSection
 EndGlobal

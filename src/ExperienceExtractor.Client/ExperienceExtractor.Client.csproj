@@ -39,6 +39,27 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Sitecore.Mvc">
+      <HintPath>..\components\Sitecore.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Speak.Applications">
+      <HintPath>..\components\Sitecore.Speak.Applications.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Speak.Charting">
+      <HintPath>..\components\Sitecore.Speak.Charting.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Speak.Client">
+      <HintPath>..\components\Sitecore.Speak.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Speak.ItemWebApi">
+      <HintPath>..\components\Sitecore.Speak.ItemWebApi.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Speak.Mvc">
+      <HintPath>..\components\Sitecore.Speak.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Speak.Web">
+      <HintPath>..\components\Sitecore.Speak.Web.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -64,6 +85,10 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="sitecore\admin\experienceextractor\Shell.aspx" />
+    <Content Include="sitecore\shell\client\Applications\ExperienceExtractor\ExperienceExtractor.css" />
+    <Content Include="sitecore\shell\client\Applications\ExperienceExtractor\ExperienceExtractor.js" />
+    <Content Include="sitecore\shell\client\Applications\ExperienceExtractor\ExperienceExtractorDimensions.js" />
+    <Content Include="sitecore\shell\client\Applications\ExperienceExtractor\ExperienceExtractorFilters.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\ExperienceExtractor\ExperienceExtractor.licenseheader">
@@ -83,6 +108,10 @@
       <Project>{86510453-48e1-40d6-9ab4-810e9e570833}</Project>
       <Name>ExperienceExtractor</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sitecore\shell\client\Applications\ExperienceExtractor\Dimensions.cshtml" />
+    <Content Include="sitecore\shell\client\Applications\ExperienceExtractor\Filters.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

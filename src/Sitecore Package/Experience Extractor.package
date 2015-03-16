@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!--
+
+Copyright 2015 Sitecore Corporation A/S
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
+except in compliance with the License. You may obtain a copy of the License at
+	http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the 
+License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+either express or implied. See the License for the specific language governing permissions 
+and limitations under the License.
+
+-->
+
+<!-- Change site to your site with Experience Extractor items -->
+<project site="develop.officecore.net" format="Zip Package">
+  <Metadata>
+    <metadata>
+      <PackageName>Sitecore Experience Extractor</PackageName>
+      <Author>Sitecore Corporation</Author>
+      <Version>0.2.0</Version>
+      <Revision />
+      <License>Copyright 2015 Sitecore Corporation A/S&lt;br /&gt;
+&lt;br /&gt;
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at&lt;br /&gt;
+&lt;br /&gt;
+&lt;a target="_blank" href="http://www.apache.org/licenses/LICENSE-2.0"&gt;http://www.apache.org/licenses/LICENSE-2.0&lt;/a&gt;&lt;br /&gt;
+&lt;br /&gt;
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</License>
+      <Comment>Source available at:
+https://github.com/Sitecore/experience-extractor</Comment>
+      <Attributes />
+      <Readme />
+      <Publisher>Sitecore Corporation</Publisher>
+      <PostStep />
+      <PackageID />
+    </metadata>
+  </Metadata>
+  <SaveProject>True</SaveProject>
+  <Sources>
+    <xitems>
+      <Entries>
+        <x-item>/core/sitecore/client/Applications/ExperienceExtractor/{EDFBA499-65A2-4691-9ED0-5727A98F9B58}/invariant/0</x-item>
+        <x-item>/core/sitecore/client/Applications/ExperienceExtractor/Extract/{60F5D52B-3CF8-4840-B790-5BF2E2C3C864}/invariant/0</x-item>
+        <x-item>/core/sitecore/client/Applications/ExperienceExtractor/Renderings/{6B120D4F-813F-446D-A5EF-4D551DAEC3A7}/invariant/0</x-item>
+        <x-item>/core/sitecore/client/Applications/ExperienceExtractor/Settings/{FBEBC46E-B671-4971-B4D3-9CB6C0602293}/invariant/0</x-item>
+        <x-item>/core/sitecore/client/Applications/ExperienceExtractor/Extract/PageSettings/{1471D8C3-E4E5-4509-BFF7-76F720D0ADBC}/invariant/0</x-item>
+        <x-item>/core/sitecore/client/Applications/ExperienceExtractor/Renderings/ExperienceExtractorDimensionPicker/{601829C9-5AE8-463F-8D89-25C2EDAD9AD1}/invariant/0</x-item>
+        <x-item>/core/sitecore/client/Applications/ExperienceExtractor/Renderings/ExperienceExtractorFilter/{FAA20D28-D6EF-4D1C-80BC-4BA83219B10A}/invariant/0</x-item>
+        <x-item>/core/sitecore/client/Applications/ExperienceExtractor/Renderings/ExperienceExtractorDimensionPicker/ExperienceExtractorDimensionPicker-Parameters/{41618C45-90E9-43E6-9F54-F7ADB1D11879}/invariant/0</x-item>
+        <x-item>/core/sitecore/client/Applications/ExperienceExtractor/Renderings/ExperienceExtractorDimensionPicker/ExperienceExtractorDimensionPicker-Parameters/__Standard Values/{BC643F86-6F11-4F10-A6F3-B87AAE3DC166}/invariant/0</x-item>
+        <x-item>/core/sitecore/client/Applications/ExperienceExtractor/Renderings/ExperienceExtractorFilter/ExperienceExtractorFilter-Parameters/{497599DD-2D07-4D12-AE1A-1B20E2A53088}/invariant/0</x-item>
+        <x-item>/core/sitecore/client/Applications/ExperienceExtractor/Renderings/ExperienceExtractorFilter/ExperienceExtractorFilter-Parameters/__Standard Values/{69B24B4C-9D03-43B4-8AE4-98C430C81DBE}/invariant/0</x-item>
+        <x-item>/core/sitecore/client/Applications/Launchpad/PageSettings/Buttons/Tools/Experience Extractor/{A3ED4683-BC82-4F9F-BB32-B604A2276DDA}/invariant/0</x-item>
+      </Entries>
+      <SkipVersions>False</SkipVersions>
+      <Converter>
+        <ItemToEntryConverter>
+          <Transforms>
+            <InstallerConfigurationTransform>
+              <Options>
+                <BehaviourOptions>
+                  <ItemMode>Undefined</ItemMode>
+                  <ItemMergeMode>Undefined</ItemMergeMode>
+                </BehaviourOptions>
+              </Options>
+            </InstallerConfigurationTransform>
+          </Transforms>
+        </ItemToEntryConverter>
+      </Converter>
+      <Include />
+      <Exclude />
+      <Name>Items</Name>
+    </xitems>
+    <xfiles>
+      <Entries>
+        <x-item>/sitecore/shell/client/Applications/ExperienceExtractor</x-item>
+        <x-item>/sitecore/shell/client/Applications/ExperienceExtractor/Dimensions.cshtml</x-item>
+        <x-item>/sitecore/shell/client/Applications/ExperienceExtractor/ExperienceExtractor.css</x-item>
+        <x-item>/sitecore/shell/client/Applications/ExperienceExtractor/ExperienceExtractor.js</x-item>
+        <x-item>/sitecore/shell/client/Applications/ExperienceExtractor/ExperienceExtractorDimensions.js</x-item>
+        <x-item>/sitecore/shell/client/Applications/ExperienceExtractor/ExperienceExtractorFilters.js</x-item>
+        <x-item>/sitecore/shell/client/Applications/ExperienceExtractor/Filters.cshtml</x-item>
+        <x-item>/sitecore/admin/experienceextractor/Shell.aspx</x-item>
+        <x-item>/bin/ExperienceExtractor.Client.dll</x-item>
+        <x-item>/bin/ExperienceExtractor.Client.pdb</x-item>
+        <x-item>/bin/ExperienceExtractor.Components.dll</x-item>
+        <x-item>/bin/ExperienceExtractor.Components.pdb</x-item>
+        <x-item>/bin/ExperienceExtractor.dll</x-item>
+        <x-item>/bin/ExperienceExtractor.MongoDb.dll</x-item>
+        <x-item>/bin/ExperienceExtractor.MongoDb.pdb</x-item>
+        <x-item>/bin/ExperienceExtractor.pdb</x-item>
+        <x-item>/bin/CsvHelper.dll</x-item>
+        <x-item>/bin/CsvHelper.pdb</x-item>
+        <x-item>/bin/CsvHelper.xml</x-item>
+        <x-item>/bin/Microsoft.Data.Edm.dll</x-item>
+        <x-item>/bin/Microsoft.Data.Edm.xml</x-item>
+        <x-item>/bin/System.Spatial.xml</x-item>
+        <x-item>/bin/System.Spatial.dll</x-item>
+        <x-item>/App_Config/Include/ExperienceExtractor/ExperienceExtractor.config</x-item>
+      </Entries>
+      <Converter>
+        <FileToEntryConverter>
+          <Root />
+          <Transforms>
+            <InstallerConfigurationTransform>
+              <Options>
+                <BehaviourOptions>
+                  <ItemMode>Undefined</ItemMode>
+                  <ItemMergeMode>Undefined</ItemMergeMode>
+                </BehaviourOptions>
+              </Options>
+            </InstallerConfigurationTransform>
+          </Transforms>
+        </FileToEntryConverter>
+      </Converter>
+      <Include />
+      <Exclude />
+      <Name>Files</Name>
+    </xfiles>
+  </Sources>
+  <Converter>
+    <TrivialConverter>
+      <Transforms />
+    </TrivialConverter>
+  </Converter>
+  <Include />
+  <Exclude />
+  <Name />
+</project>

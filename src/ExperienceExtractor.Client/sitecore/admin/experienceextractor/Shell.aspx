@@ -89,7 +89,14 @@
 <body>
     
 	<div id="editor">
-
+<%
+		var job = Request.Form["job"];
+		if (!string.IsNullOrEmpty(job))
+		{
+		    Response.Write(job);
+		}
+		else
+		{ %>	    
 {
    "labels": "en-US", //Extract English labels
    "source": {
@@ -106,8 +113,8 @@
          {
             "name": "MonthlyVisits", //Main table with name "Visits"
             "fields": [
-               {"date": {"resolution": "month"}}, //or "year", "quarter", "day"
-               //{"time": "hour"} //Uncomment on add time of day dimension
+               {"date": {"resolution": "month"}}, //or "year", "quarter", "date"
+               //{"time": "hour"}, //Uncomment to add time of day dimension
                {"dimension": {
                  "name": "Geo", //Create a dimension table with country, region and city from Experience Analytics
                  "fields": [
@@ -117,6 +124,7 @@
                  ]
                }},
                {"xa": "Visits/By Campaign"}, //Include campaign from Experience Analytics
+			   //{"xa": "Name of dimension here"} //You can find the available dimensions at "/sitecore/system/Marketing Control Panel/Experience Analytics/Dimensions" in the content editor 
                "facts" //Add the 6 Experience Analytics facts, Visits, Value, Bounces, Conversions, TimeOnSite, PageViews, Count
             ]
          }
@@ -131,7 +139,7 @@
       //"msaccess"
    ]
 }  
-  
+<% } %>
 	</div>
 
 	<div id="submit-panel">
@@ -147,6 +155,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/js-yaml/3.2.6/js-yaml.min.js"></script>
 	
     <script>
+        window.name = "ExperienceExtractorShell";
         $(function () {
 
             var yamlMode = document.location.hash == "#yaml";

@@ -63,4 +63,4 @@ Sitecore binaries are not part of this distribution. You need to copy your own v
 ##How to use
 Please refer to the [Wiki](https://github.com/Sitecore/experience-extractor/wiki/) for documentation on how to use Experience Extractor and examples.
 
-![101](https://raw.githubusercontent.com/wiki/Sitecore/experience-extractor/resources/Extracting%20data.gif)
+![101](https://drive.google.com/uc?export=download&id=0B0Vm6WIFt16zdlM0dVQ2b3JxZkE&authuser=0)

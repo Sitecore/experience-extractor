@@ -39,15 +39,20 @@ namespace ExperienceExtractor.Export
                 {
                     return Sources[0].Rows;
                 }
-
-                IEnumerable<object[]> rows = null;
+                
                 var comparer = new RowComparer(Schema);
-                foreach (var source in Sources)
-                {
-                    rows = rows == null ? source.Rows : rows.MergeSorted(source.Rows, comparer);
-                }
+                
+                //O(Log(M)*N) compared to the old O(M*N)
+                return Sources.Select(t => t.Rows).ToList().MergeSorted(MergeFacts, comparer);
 
-                return rows.MergeDupplicates(MergeFacts, comparer);
+                
+                //IEnumerable<object[]> rows = null;
+                //foreach (var source in Sources)
+                //{
+                //    rows = rows == null ? source.Rows : rows.MergeSorted(source.Rows, comparer);
+                //}
+
+                //return rows.MergeDupplicates(MergeFacts, comparer);
             }
         }
 

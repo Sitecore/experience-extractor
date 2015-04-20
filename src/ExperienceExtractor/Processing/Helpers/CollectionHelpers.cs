@@ -51,6 +51,36 @@ namespace ExperienceExtractor.Processing.Helpers
             if (prev != null) yield return prev;
         }
 
+        public static IEnumerable<T> MergeSorted<T>(this IList<IEnumerable<T>> lists, Func<T, T, T> mergeAction = null, IComparer<T> comparer = null)
+            where T : class
+        {
+            comparer = comparer ?? Comparer<T>.Default;
+
+            if (lists.Count == 0) return Enumerable.Empty<T>();
+            if (lists.Count == 1) return lists[0];
+
+            var hasMergeAction = mergeAction != null;
+            var pairs = new List<IEnumerable<T>>(1 + lists.Count / 2);
+            for (var i = 0; i < lists.Count; i += 2)
+            {
+                if (i == lists.Count - 1)
+                {
+                    pairs.Add(lists[i]);
+                }
+                else
+                {
+                    pairs.Add(lists[i].MergeSorted(lists[i + 1], comparer));
+                }
+
+                if (hasMergeAction)
+                {
+                    pairs[pairs.Count - 1] = pairs[pairs.Count - 1].MergeDupplicates(mergeAction, comparer);
+                }
+            }
+
+            return pairs.MergeSorted(mergeAction, comparer);
+        }
+
         public static IEnumerable<T> MergeSorted<T>(this IEnumerable<T> first, IEnumerable<T> second, IComparer<T> comparer = null)
         {
             comparer = comparer ?? Comparer<T>.Default;

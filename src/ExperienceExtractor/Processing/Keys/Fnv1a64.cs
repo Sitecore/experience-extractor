@@ -27,10 +27,17 @@ namespace ExperienceExtractor.Processing.Keys
             {
                 const long fnv64Prime = 0x100000001b3;
                 var hash = (long)14695981039346656037;
+                //foreach (var o in values)
+                //{
+                //    hash = (hash ^ (o == null ? 0 : o.GetHashCode())) * fnv64Prime;
+                //}                
                 foreach (var o in values)
                 {
-                    hash = (hash ^ (o == null ? 0 : o.GetHashCode())) * fnv64Prime;
-                }                
+                    foreach (var b in ByteUtil.GetBytes(o))
+                    {
+                        hash = (hash ^ b) * fnv64Prime;
+                    }
+                }
 
                 return hash;
             }

@@ -132,6 +132,7 @@
     <Compile Include="Mapping\IItemFieldLookup.cs" />
     <Compile Include="Processing\DataSources\DataSourceBase.cs" />
     <Compile Include="Processing\DateTime\DateRangeFilter.cs" />
+    <Compile Include="Processing\Keys\ByteHelper.cs" />
     <Compile Include="Processing\Labels\LabelLoader.cs" />
     <Compile Include="Mapping\Splitting\MatrixTableMapper.cs" />
     <Compile Include="Mapping\Splitting\MatrixTypes.cs" />

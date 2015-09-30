@@ -80,6 +80,9 @@ namespace ExperienceExtractor.Api.Pipelines
                 exportNode.GetAttribute("xdbConnection").SetIfDefined(value =>
                     ExperienceExtractorWebApiConfig.XdbConnectionString = value);
 
+                exportNode.GetAttribute("maxJobHistoryLength").SetIfDefined(value=>
+                    ExperienceExtractorWebApiConfig.MaxJobHistoryLength = XmlConvert.ToInt32(value));
+
 
                 var repositoryNode = exportNode.SelectSingleNode("jobRepository");
                 if (repositoryNode != null)

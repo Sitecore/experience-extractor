@@ -15,7 +15,9 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using ExperienceExtractor.Data.Schema;
 using ExperienceExtractor.Mapping;
+using Newtonsoft.Json;
 using Sitecore.Data;
 using Sitecore.Diagnostics;
 using ExperienceExtractor.Export;
@@ -41,6 +43,8 @@ namespace ExperienceExtractor.Api.Jobs
         public long? EstimatedClientItemCount { get; private set; }
 
         public long ItemsProcessed { get; private set; }
+
+        public long RowsCreated { get; private set; }
 
         public double? Progress
         {
@@ -78,7 +82,7 @@ namespace ExperienceExtractor.Api.Jobs
         {
             Id = id ?? Guid.NewGuid();
             Created = DateTime.Now;
-
+            
             Status = JobStatus.Pending;
             Specification = specification;
 
@@ -96,21 +100,15 @@ namespace ExperienceExtractor.Api.Jobs
             {
                 Directory.CreateDirectory(TempDirectory);
 
-                File.WriteAllText(Path.Combine(TempDirectory, "Specification.txt"), Specification.ToString());
+                File.WriteAllText(Path.Combine(TempDirectory, "specification.json"), Specification.ToString());
 
                 SetStatus(JobStatus.Preparing);
 
                 Specification.Initialize(this);
 
-                var source = Specification.CreateDataSource();
-                EstimatedClientItemCount = source.Count;
+                var source = Specification.CreateDataSource();                
 
                 PostProcessors = Specification.CreatePostProcessors().ToArray();
-
-                foreach (var proc in PostProcessors)
-                {
-                    proc.Validate();
-                }
 
                 var jobDirectory = TempDirectory;
 
@@ -138,19 +136,43 @@ namespace ExperienceExtractor.Api.Jobs
                         FieldLookup = lookup
                     };
 
-                    proc.BatchWriter = new TableDataBatchWriter(new CsvExporter(jobDirectory)
+                    var exporter =  Specification.CreateExporter(jobDirectory) as CsvExporter; //Move PartititionPrefix so this cast isn't necessary
+                    if (exporter == null)
                     {
-                        PartitionPrefix = "~" + i + "_",
-                    })
+                        exporter = new CsvExporter(jobDirectory);                        
+                    }
+                    exporter.PartitionPrefix = "~" + i + "_";
+                    exporter.KeepOutput = true; //Don't delete the job's main directory
+                    proc.BatchWriter = new TableDataBatchWriter(exporter)                    
                     {
                         SyncLock = this,
                         MaximumSize = ExecutionSettings.SizeLimit
                     };
 
+                    proc.Initialize();
+
                     return proc;
                 }).ToArray();
 
 
+
+                var hasUpdates = false;                
+                //Allow post processors to validate their conditions (if any). This allows the job to fail before data is processed
+                //Allow post processors to filter data source for updates
+                foreach (var pp in PostProcessors)
+                {
+                    pp.Validate(processors[0].Tables, Specification);
+                    if (pp.UpdateDataSource(processors[0].Tables, source))
+                    {
+                        if (hasUpdates)
+                        {
+                            throw new InvalidOperationException("Only one post processor can update the data source");
+                        }
+                        hasUpdates = true;
+                    }
+                }
+
+                EstimatedClientItemCount = source.Count;
                 
                 //Start the processors
                 var processingThreads = processors.Select(p =>
@@ -187,7 +209,8 @@ namespace ExperienceExtractor.Api.Jobs
                         OnProgress();
                     }
                     ItemsProcessed = args;
-                };
+                    RowsCreated = processors.Sum(p => p.RowsCreated);
+                };                
 
                 //Add items to the collection that the processors consume
                 foreach (var item in source)
@@ -211,6 +234,8 @@ namespace ExperienceExtractor.Api.Jobs
                     p.Join();
                 }
 
+                RowsCreated = processors.Sum(p => p.RowsCreated);
+
                 if (Status == JobStatus.Running)
                 {
                     //Now we know how many items we got for sure. Update progress to 100%
@@ -218,40 +243,52 @@ namespace ExperienceExtractor.Api.Jobs
 
                     SetStatus(JobStatus.Merging);
 
-                    var csvWriter = Specification.CreateExporter(jobDirectory);
-
-                    var tables = csvWriter.Export(MergedTableData.FromTableSets(processors.Select(p => p.Tables)))
-                        .Cast<CsvTableData>().ToArray();
-
-                    foreach (var proc in processors)
+                    using (var csvWriter = Specification.CreateExporter(TempDirectory))
                     {
-                        SizeLimitExceeded = SizeLimitExceeded || proc.BatchWriter.End;
-                        proc.BatchWriter.Dispose();
+
+                        var tables = MergedTableData.FromTableSets(processors.Select(p => p.Tables)).ToArray();
+
+                        
+                        var w = csvWriter as CsvExporter;
+                        if (w == null || w.KeepOutput)
+                        {                            
+                            tables = csvWriter.Export(tables).ToArray();
+                        }
+
+
+                        File.WriteAllText(Path.Combine(jobDirectory, "schema.json"),
+                            tables.Select(t => t.Schema).Serialize());
+
+
+                        
+                        foreach (var postProcessor in PostProcessors)
+                        {
+                            CurrentPostProcessor = postProcessor;
+                            SetStatus(JobStatus.PostProcessing, postProcessor.Name);
+
+                            postProcessor.Process(jobDirectory, tables, Specification);
+                        }
+                        CurrentPostProcessor = null;
+
+                        foreach (var proc in processors)
+                        {                            
+                            SizeLimitExceeded = SizeLimitExceeded || proc.BatchWriter.End;
+                            proc.BatchWriter.Dispose();
+                        }
+
+                        SetStatus(JobStatus.Completing);
                     }
-
-                    foreach (var postProcessor in PostProcessors)
-                    {
-                        CurrentPostProcessor = postProcessor;
-                        SetStatus(JobStatus.PostProcessing, postProcessor.Name);
-
-                        postProcessor.Process(jobDirectory, tables);
-                    }
-                    CurrentPostProcessor = null;
-
-                    SetStatus(JobStatus.Completing);
-
                     SetStatus(JobStatus.Completed);
                 }
 
             }
             catch (Exception ex)
             {
-                Log.Error("Job failed", ex);
+                Log.Error("Job failed", ex, this);
                 LastException = ex;
                 SetStatus(JobStatus.Failed, ex.ToString());
             }
-
-            EndDate = DateTime.Now;
+            
             try
             {
                 OnJobEnded();
@@ -261,6 +298,7 @@ namespace ExperienceExtractor.Api.Jobs
                 Log.Error("Exception occured after job ended", ex, this);
                 LastException = ex;
             }
+            EndDate = DateTime.Now;
 
             try
             {
@@ -296,7 +334,7 @@ namespace ExperienceExtractor.Api.Jobs
         {
             if (!string.IsNullOrEmpty(TempDirectory) && Directory.Exists(TempDirectory))
             {
-                Directory.Delete(TempDirectory);
+                Directory.Delete(TempDirectory, true);
             }
         }
 

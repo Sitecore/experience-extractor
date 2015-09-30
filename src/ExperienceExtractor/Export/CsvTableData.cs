@@ -25,7 +25,7 @@ using ExperienceExtractor.Processing;
 
 namespace ExperienceExtractor.Export
 {
-    public class CsvTableData : TableData, ITableDataWriter
+    public class CsvTableData : WritableTableData
     {
         public string Path { get; set; }
         public string Delimiter { get; set; }
@@ -60,7 +60,7 @@ namespace ExperienceExtractor.Export
                     yield break;
                 }
 
-                using (var f = new StreamReader(File.Open(Path, FileMode.Open), Encoding.UTF8, true, 1048576))
+                using (var f = new StreamReader(File.Open(Path, FileMode.Open), Encoding.UTF8, true))
                 using (
                     var csv = new CsvReader(f,
                         new CsvConfiguration { Delimiter = Delimiter, CultureInfo = NumberCulture, HasHeaderRecord = true }))
@@ -86,12 +86,11 @@ namespace ExperienceExtractor.Export
             }
         }
 
-        public void Dispose()
-        {
-            return;
+        public override void Dispose()
+        {            
         }
 
-        public void WriteRows(IEnumerable<object[]> rows)
+        public override void WriteRows(IEnumerable<object[]> rows)
         {
             Directory.CreateDirectory(new FileInfo(Path).DirectoryName);
 
@@ -134,5 +133,7 @@ namespace ExperienceExtractor.Export
             }
             csv.NextRecord();
         }
+
+        //public static IList<TableData> Load  
     }
 }

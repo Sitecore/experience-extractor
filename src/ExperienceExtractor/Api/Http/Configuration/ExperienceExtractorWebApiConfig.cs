@@ -10,11 +10,11 @@
 // and limitations under the License.
 // -------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Web.Hosting;
 using System.Web.Http;
-using Sitecore.Analytics.Model;
 using ExperienceExtractor.Api.Jobs;
 using Sitecore.Diagnostics;
 using RouteParameter = System.Web.Http.RouteParameter;
@@ -27,8 +27,7 @@ namespace ExperienceExtractor.Api.Http.Configuration
 
         public static string JobRouteName { get { return RoutePrefix + ".Job"; } }
         public static string JobResultRouteName { get { return RoutePrefix + ".JobResults"; } }
-        public static string ParseFactoryRouteName { get { return RoutePrefix + ".ParseFactories"; } }
-        
+        public static string ParseFactoryRouteName { get { return RoutePrefix + ".ParseFactories"; } }        
 
         public static bool AllowAnonymousAccess { get; set; }
 
@@ -40,6 +39,13 @@ namespace ExperienceExtractor.Api.Http.Configuration
         public static int FieldCacheSize { get; set; }
 
         public static string XdbConnectionString { get; set; }
+
+        public static int MaxJobHistoryLength { get; set; }
+
+        /// <summary>
+        /// Maximum expected lag before interactions are saved in xDB.
+        /// </summary>
+        public static TimeSpan XdbLag { get; set; }
 
         public static JobExecutionSettings JobExecutionSettings { get; set; }
 
@@ -65,6 +71,8 @@ namespace ExperienceExtractor.Api.Http.Configuration
                 DataSourceBufferSize = 500,
                 SizeLimit = 2 * 1024 * 1024 * 1024L
             };
+
+            MaxJobHistoryLength = 100;
         }
 
 
@@ -79,6 +87,8 @@ namespace ExperienceExtractor.Api.Http.Configuration
                 defaults: new { controller = "ExperienceExtractorMetaData", action = "ParseFactories" }
             );
 
+            //Jobs
+
             config.Routes.MapHttpRoute(
                 name: JobResultRouteName,
                 routeTemplate: JobApiRoute + "/{id}/result",
@@ -91,7 +101,7 @@ namespace ExperienceExtractor.Api.Http.Configuration
                 defaults: new { controller = "ExperienceExtractorJobs", id = RouteParameter.Optional }
             );
 
-            GlobalConfiguration.Configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+            //GlobalConfiguration.Configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             Log.Info(string.Format("Initailized Experience Extractor API at {0}", JobApiRoute), typeof(ExperienceExtractorWebApiConfig));
         }
     }

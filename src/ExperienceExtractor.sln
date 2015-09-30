@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceExtractor.Compone
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceExtractor.Client", "ExperienceExtractor.Client\ExperienceExtractor.Client.csproj", "{7DD3C4FF-2CAD-4E33-A6AE-4032B63B291A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceExtractor.Scheduling", "ExperienceExtractor.Scheduling\ExperienceExtractor.Scheduling.csproj", "{50432DC8-1768-4194-B880-D72AD2CBCE1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{7DD3C4FF-2CAD-4E33-A6AE-4032B63B291A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DD3C4FF-2CAD-4E33-A6AE-4032B63B291A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DD3C4FF-2CAD-4E33-A6AE-4032B63B291A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50432DC8-1768-4194-B880-D72AD2CBCE1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50432DC8-1768-4194-B880-D72AD2CBCE1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50432DC8-1768-4194-B880-D72AD2CBCE1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50432DC8-1768-4194-B880-D72AD2CBCE1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -22,7 +22,7 @@ using Sitecore.Analytics.Data.DataAccess.MongoDb;
 
 namespace ExperienceExtractor.MongoDb
 {
-    public class MongoDbDataSource<TItem> : DataSourceBase
+    public abstract class MongoDbDataSource<TItem> : DataSourceBase
     {
         private readonly MongoDbCollection _collection;
         public int DeserializationThreads { get; set; }

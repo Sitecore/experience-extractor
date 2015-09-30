@@ -13,8 +13,12 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
+using ExperienceExtractor.Data;
+using ExperienceExtractor.Data.Schema;
+using Newtonsoft.Json;
 using Sitecore.Data;
 using Sitecore.Diagnostics;
 using ExperienceExtractor.Api.Jobs;
@@ -24,6 +28,8 @@ using ExperienceExtractor.Mapping.Splitting;
 using ExperienceExtractor.Processing;
 using ExperienceExtractor.Processing.DataSources;
 using Sitecore.Globalization;
+using Sitecore.Shell.Applications.ContentEditor;
+using File = System.IO.File;
 
 namespace ExperienceExtractor.Api.Parsing
 {
@@ -52,6 +58,11 @@ namespace ExperienceExtractor.Api.Parsing
         protected abstract TType Parse<TType>(ParseState state);
 
         public Database Database { get; set; }
+
+        public virtual string LockKey
+        {
+            get { return RootState.TryGet<string>("LockKey"); }
+        }
 
         public virtual IDataSource ParseDataSource(ParseState state)
         {
@@ -135,8 +146,32 @@ namespace ExperienceExtractor.Api.Parsing
             return RootState.SelectMany("PostProcessors").Select(ParseTableDataPostProcessor);
         }
 
+        protected virtual OutputFormat DefaultFormat
+        {
+            get { return OutputFormat.BinaryPartitions; }
+        }
+
 
         public virtual ITableDataExporter CreateExporter(string tempPath)
+        {
+            var cultureName = "en-US";
+            var delim = "\t";
+            var format = DefaultFormat;
+
+            var csvConfig = RootState.Select("export");
+            if (csvConfig != null)
+            {
+                cultureName = csvConfig.TryGet("culture", cultureName);
+                delim = csvConfig.TryGet("delim", delim);
+                format = csvConfig.TryGet("format", format);                
+            }                        
+
+            return new CsvExporter(tempPath, delim, CultureInfo.GetCultureInfo(cultureName), 
+                binaryPartitions: format.HasFlag(OutputFormat.BinaryPartitions), binaryOutput: format.HasFlag(OutputFormat.Binary),
+                keepOutput: !format.HasFlag(OutputFormat.Binary));
+        }
+
+        public IList<TableData> Load(string tempPath)
         {
             var cultureName = "en-US";
             var delim = "\t";
@@ -147,9 +182,14 @@ namespace ExperienceExtractor.Api.Parsing
                 cultureName = csvConfig.TryGet("culture", cultureName);
                 delim = csvConfig.TryGet("delim", delim);
             }
-            
 
-            return new CsvExporter(tempPath, delim, CultureInfo.GetCultureInfo(cultureName));
+            var schemas = TableDataHelpers.Deserialize(File.ReadAllText(Path.Combine(tempPath, "Schema.json")));                
+
+            return
+                schemas.Select(
+                    s =>
+                        (TableData) new CsvTableData(s, Path.Combine(tempPath, s.Name + ".txt"), delim,
+                            CultureInfo.GetCultureInfo(cultureName))).ToList();
         }
 
         public virtual void Initialize(Job job)

@@ -30,6 +30,8 @@ namespace ExperienceExtractor.MongoDb.Filters
             Skip = skip;
         }
 
+        public bool IsStagingFilter { get { return true; } }
+
         public bool Include(object item)
         {
             return true;

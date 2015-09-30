@@ -24,13 +24,13 @@ namespace ExperienceExtractor.Export
     /// <summary>
     /// Classes implementing this interface persists a list of tables and provides access to the persisted data as tables with the same schemas
     /// </summary>
-    public interface ITableDataExporter
+    public interface ITableDataExporter : IDisposable
     {
         /// <summary>
         /// Persists the tables specified and returns tables with the same schemas access accessing the persisted data
         /// </summary>
         /// <param name="tables"></param>
         /// <returns></returns>
-        IEnumerable<TableData> Export(IEnumerable<TableData> tables);        
+        IEnumerable<TableData> Export(IEnumerable<TableData> tables);
     }
 }

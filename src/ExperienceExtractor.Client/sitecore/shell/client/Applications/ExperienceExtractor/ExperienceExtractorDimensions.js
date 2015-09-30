@@ -330,10 +330,10 @@ define(["sitecore", "jquery", "experienceExtractor", "dynatree"], function (_sc,
 						return data;
 					}));
 					
-					data.children.push(createDimension("Contact ID", "VISIT", function(data){
+					data.children.push(createDimension("Contact ID (Unique visitors)", "VISIT", function(data){
 						data.select = false; 								
 						data.updateJob = function(table, data) {
-							table.fields.push({"visit": "ContactId"});
+							table.fields.push("contactid");
 						}													
 						return data;
 					}));	

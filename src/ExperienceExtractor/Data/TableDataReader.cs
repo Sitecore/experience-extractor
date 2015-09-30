@@ -11,13 +11,15 @@
 // -------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 
 namespace ExperienceExtractor.Data
 {
-    internal class TableDataReader : IDataReader
+    internal class TableDataReader : DbDataReader
     {
         
         private readonly IEnumerator<object[]> _source;
@@ -40,17 +42,17 @@ namespace ExperienceExtractor.Data
         }
 
 
-        void IDataReader.Close()
+        public override void Close()
         {
             Dispose();
         }
 
-        int IDataReader.Depth
+        public override int Depth
         {
             get { return 0; }
         }
 
-        DataTable IDataReader.GetSchemaTable()
+        public override DataTable GetSchemaTable()
         {
             // these are the columns used by DataTable load
             var table = new DataTable
@@ -76,21 +78,26 @@ namespace ExperienceExtractor.Data
             }
             return table;
         }
+        
+        public override bool HasRows
+        {
+            get { return _current != null; }
+        }
 
-        bool IDataReader.IsClosed
+        public override bool IsClosed
         {
             get { return _source == null; }
         }
 
-        bool IDataReader.NextResult()
+        public override bool NextResult()
         {
             return false;
         }
 
-        bool IDataReader.Read()
+        public override bool Read()
         {
             if (_source != null && _source.MoveNext())
-            {
+            {                
                 _current = _source.Current;
                 return true;
             }
@@ -98,7 +105,7 @@ namespace ExperienceExtractor.Data
             return false;
         }
 
-        int IDataReader.RecordsAffected
+        public override int RecordsAffected
         {
             get { return 0; }
         }
@@ -108,22 +115,22 @@ namespace ExperienceExtractor.Data
         {
         }
 
-        int IDataRecord.FieldCount
+        public override int FieldCount
         {
             get { return _fields.Length; }
         }
 
-        bool IDataRecord.GetBoolean(int i)
+        public override bool GetBoolean(int i)
         {
             return (bool)this[i];
         }
 
-        byte IDataRecord.GetByte(int i)
+        public override byte GetByte(int i)
         {
             return (byte)this[i];
         }
 
-        long IDataRecord.GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
+        public override long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
         {
             var s = (byte[])this[i];
             var available = s.Length - (int)fieldOffset;
@@ -134,12 +141,12 @@ namespace ExperienceExtractor.Data
             return count;
         }
 
-        char IDataRecord.GetChar(int i)
+        public override char GetChar(int i)
         {
             return (char)this[i];
         }
 
-        long IDataRecord.GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
+        public override long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
         {
             var s = (string)this[i];
             var available = s.Length - (int)fieldoffset;
@@ -150,82 +157,87 @@ namespace ExperienceExtractor.Data
             return count;
         }
 
-        IDataReader IDataRecord.GetData(int i)
-        {
-            throw new NotSupportedException();
-        }
+        //IDataReader IDataRecord.GetData(int i)
+        //{
+        //    throw new NotSupportedException();
+        //}
 
-        string IDataRecord.GetDataTypeName(int i)
+        public override string GetDataTypeName(int i)
         {
             return _fields[i].Name;
         }
 
-        System.DateTime IDataRecord.GetDateTime(int i)
+        public override IEnumerator GetEnumerator()
+        {
+            return new DbEnumerator(this, true);
+        }
+
+        public override System.DateTime GetDateTime(int i)
         {
             return (System.DateTime)this[i];
         }
 
-        decimal IDataRecord.GetDecimal(int i)
+        public override decimal GetDecimal(int i)
         {
             return (decimal)this[i];
         }
 
-        double IDataRecord.GetDouble(int i)
+        public override double GetDouble(int i)
         {
             return (double)this[i];
         }
 
-        Type IDataRecord.GetFieldType(int i)
+        public override Type GetFieldType(int i)
         {
             return _fields[i].Type;
         }
 
-        float IDataRecord.GetFloat(int i)
+        public override float GetFloat(int i)
         {
             return (float)this[i];
         }
 
-        Guid IDataRecord.GetGuid(int i)
+        public override Guid GetGuid(int i)
         {
             return (Guid)this[i];
         }
 
-        short IDataRecord.GetInt16(int i)
+        public override short GetInt16(int i)
         {
             return (short)this[i];
         }
 
-        int IDataRecord.GetInt32(int i)
+        public override int GetInt32(int i)
         {
             return (int)this[i];
         }
 
-        long IDataRecord.GetInt64(int i)
+        public override long GetInt64(int i)
         {
             return (long)this[i];
         }
 
-        string IDataRecord.GetName(int i)
+        public override string GetName(int i)
         {
             return _fields[i].Name;
         }
 
-        public int GetOrdinal(string name)
+        public override int GetOrdinal(string name)
         {
             return Array.IndexOf(_names, name);
         }
 
-        string IDataRecord.GetString(int i)
+        public override string GetString(int i)
         {
             return (string)this[i];
         }
 
-        object IDataRecord.GetValue(int i)
+        public override object GetValue(int i)
         {
             return this[i];
         }
 
-        int IDataRecord.GetValues(object[] values)
+        public override int GetValues(object[] values)
         {
             var size = values.Length < _current.Length ? values.Length : _current.Length;
             Array.Copy(_current, values, size);
@@ -236,18 +248,18 @@ namespace ExperienceExtractor.Data
             return size;
         }
 
-        bool IDataRecord.IsDBNull(int i)
+        public override bool IsDBNull(int i)
         {
-            return this[i] is DBNull;
+            return this[i] is DBNull || this[i] == null;
         }
 
-        object IDataRecord.this[string name]
+        public override object this[string name]
         {
             get { return _current[GetOrdinal(name)] ?? DBNull.Value; }
 
         }
         
-        public object this[int i]
+        public override object this[int i]
         {
             get { return _current[i] ?? DBNull.Value; }
         }

@@ -10,6 +10,7 @@
 // and limitations under the License.
 // -------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -77,6 +78,11 @@ namespace ExperienceExtractor.Export
         public void Dispose()
         {
             DisposePartitions();
+            var d = PartitionSource as IDisposable;
+            if (d != null)
+            {
+                d.Dispose();
+            }
         }
 
         public bool End

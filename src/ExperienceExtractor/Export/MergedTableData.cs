@@ -41,7 +41,11 @@ namespace ExperienceExtractor.Export
                 }
                 
                 var comparer = new RowComparer(Schema);
-                
+
+                if (Schema.Name == "MonthlyVisits")
+                {
+                    var b = 4;
+                }
                 //O(Log(M)*N) compared to the old O(M*N)
                 return Sources.Select(t => t.Rows).ToList().MergeSorted(MergeFacts, comparer);
 

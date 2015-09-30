@@ -24,6 +24,9 @@ namespace ExperienceExtractor.Processing.DataSources
         
         public event EventHandler<int> ItemLoaded;
 
+        public abstract void ApplyUpdateFilter(System.DateTime? lastSaveDate, System.DateTime? lastSaveDateEnd);
+
+
         protected virtual void OnItemLoaded(int e)
         {
             EventHandler<int> handler = ItemLoaded;

@@ -10,6 +10,7 @@
 // and limitations under the License.
 // -------------------------------------------------------------------------------------------
 
+using ExperienceExtractor.Api.OData;
 using ExperienceExtractor.Api.Parsing;
 using ExperienceExtractor.Components.PostProcessors;
 using ExperienceExtractor.Processing;

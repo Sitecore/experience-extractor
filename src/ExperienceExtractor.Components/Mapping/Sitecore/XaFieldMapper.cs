@@ -25,16 +25,18 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
         public IDimension Dimension { get; set; }
 
         private string _keyName;        
-        private readonly bool _primaryKey;                   
+        private readonly bool _primaryKey;
+        private readonly string _friendlyName;
 
         public XaFieldMapper(IDimension dimension,
             bool primaryKey = false,
-            string keyName = null)
+            string keyName = null, string friendlyName = null)
         {
             Dimension = dimension;
 
             _keyName = keyName ?? dimension.GetType().Name + "Key";
             _primaryKey = primaryKey;
+            _friendlyName = friendlyName ?? SuggestFriendlyKeyName(_keyName);
         }
 
 
@@ -45,6 +47,7 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
                 {
                     FieldType = _primaryKey ? FieldType.Key : FieldType.Dimension,
                     Name = _keyName,
+                    FriendlyName = _friendlyName,
                     ValueType = typeof (string)
                 };
             
@@ -71,6 +74,37 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
                 return Dimension.GetData(ctx).FirstOrDefault();
             }
             return null;
+        }
+
+
+        public static string SuggestFriendlyKeyName(string keyName)
+        {
+            if (keyName.StartsWith("By"))
+            {
+                keyName = keyName.Substring(2);
+            }
+
+            if (keyName.EndsWith("Key"))
+            {
+                keyName = keyName.Substring(0, keyName.Length - 3) + " ID";
+            }
+
+            return keyName;
+        }
+
+        public static string SuggestFriendlyLabelName(string keyName)
+        {
+            if (keyName.StartsWith("By"))
+            {
+                keyName = keyName.Substring(2);
+            }
+
+            if (keyName.EndsWith("Label"))
+            {
+                keyName = keyName.Substring(0, keyName.Length - 5);
+            }
+
+            return keyName;
         }
     }
 }

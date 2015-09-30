@@ -15,7 +15,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExperienceExtractor.Api.Jobs;
+using ExperienceExtractor.Data;
 using ExperienceExtractor.Export;
+using ExperienceExtractor.Processing.DataSources;
 
 namespace ExperienceExtractor.Processing
 {
@@ -35,11 +38,15 @@ namespace ExperienceExtractor.Processing
         /// </summary>
         /// <param name="tempDirectory">The temporary directory where the output of a job is collected</param>
         /// <param name="tables">Tables containing the data from a completed job</param>
-        void Process(string tempDirectory, IEnumerable<CsvTableData> tables);
+        /// <param name="job"></param>
+        void Process(string tempDirectory, IEnumerable<TableData> tables, IJobSpecification job);
 
         /// <summary>
         /// Validates the prerequisites for the post processing (e.g. external connections) before a job starts to give early feedback about errors. 
         /// </summary>
-        void Validate();
+        void Validate(IEnumerable<TableData> tables, IJobSpecification job);
+
+
+        bool UpdateDataSource(IEnumerable<TableData> tables, IDataSource source);        
     }
 }

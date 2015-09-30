@@ -20,3 +20,5 @@ and limitations under the License.
 .sc-experience-extractor-filters { padding: 10px;}
 
 .sc-experience-extractor .sc-Slider .titleBar, .sc-experience-extractor .sc-Slider .tooltip { z-index: 0}
+
+.sc-experience-extractor .info-box { position: absolute; display: none; }

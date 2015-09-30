@@ -28,5 +28,9 @@ namespace ExperienceExtractor.Tests.Support
         {
             return (Tables = tables);
         }
+
+        public void Dispose()
+        {            
+        }
     }
 }

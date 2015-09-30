@@ -17,34 +17,57 @@
 @using Sitecore.Web.UI.Controls.Common.Renderings
 @using ExperienceExtractor.Api.Http.Configuration
 @{
-	var rendering = this.Html.Sitecore().Controls().GetUserControl(this.Model.Rendering);
-	var renderingId = rendering.ControlId;	
-	rendering.Requires.Script("client", "ExperienceExtractorFilters.js");
-	
-	rendering.Class = "sc-experience-extractor sc-experience-extractor-filters";	
+    var rendering = this.Html.Sitecore().Controls().GetUserControl(this.Model.Rendering);
+    var renderingId = rendering.ControlId;
+    rendering.Requires.Script("client", "ExperienceExtractorFilters.js");
+
+    rendering.Class = "sc-experience-extractor sc-experience-extractor-filters";
 }
-<div @rendering.HtmlAttributes>	  
-  <div class='row'>
-	  <div class="col-md-1"><span class='big-label'>From date</span></div>
-	  <div class='col-md-2'>		
-		@Html.Sitecore().Controls().Rendering(Html, "{3CAC8515-EA11-4B97-A1E5-546DC6FC5E59}", renderingId + "FromDate", "", new { })
-	  </div>
-	  <div class="col-md-1"><span class='big-label'>To date</span></div>
-	  <div class='col-md-2'>		
-		@Html.Sitecore().Controls().Rendering(Html, "{3CAC8515-EA11-4B97-A1E5-546DC6FC5E59}", renderingId + "ToDate", "", new { })
-	  </div>
-   </div>  
-   <div class="row">
-		<div class="col-md-6"><span class='big-label'>Sampling</span></div>
-   </div>
-   <div class="row">
-		<div class="col-md-6">
-			@Html.Sitecore().Controls().Rendering(Html, "{7E49DE99-146A-4F62-8555-A731AAB7427B}", renderingId + "Sampling", "", new { Minimum=10, Maximum=100, Step=10, TitleValueSuffix=" %", SelectedValue=30 })			
-		</div>
-   </div>
-   
-   <form method="post" action="/sitecore/admin/experienceextractor/shell.aspx#yaml" target="ExperienceExtractorShell">
-		<input type="hidden" name="job" value="" />	  
-		<button type="submit" class='btn btn-primary execute-button'>Update shell</button>
-	</form>
-</div>             
+<div @rendering.HtmlAttributes>
+    <div class='row'>
+        <div class="col-md-1"><span class='big-label'>From date</span></div>
+        <div class='col-md-2'>
+            @Html.Sitecore().Controls().Rendering(Html, "{3CAC8515-EA11-4B97-A1E5-546DC6FC5E59}", renderingId + "FromDate", "", new { })
+        </div>
+        <div class="col-md-1"><span class='big-label'>To date</span></div>
+        <div class='col-md-2'>
+            @Html.Sitecore().Controls().Rendering(Html, "{3CAC8515-EA11-4B97-A1E5-546DC6FC5E59}", renderingId + "ToDate", "", new { })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6"><span class='big-label'>Sampling</span></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.Sitecore().Controls().Rendering(Html, "{7E49DE99-146A-4F62-8555-A731AAB7427B}", renderingId + "Sampling", "", new { Minimum = 10, Maximum = 100, Step = 10, TitleValueSuffix = " %", SelectedValue = 30 })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="@(renderingId)-cube">Create SSAS tabular cube with this name</label>
+                <div class="input-group">
+                    <input type="text" id="@(renderingId)-cube" class="form-control" />
+                    <span class="input-group-addon" id="basic-addon2" data-toggle="tooltip" data-placement="right" title="Tooltip on right"><span class="glyphicon glyphicon-info-sign"></span></span>
+                </div>
+            </div>
+            <div class="alert alert-info info-box" style="width: 500px;position:absolute;z-index: 10000;" id="@(renderingId)-cubehint">
+                If you specify a name here, a SSAS tabular cube will be created. You can connect to this from <a href="http://www.powerbi.com" target="_blank">PowerBI</a> using <a href="http://www.microsoft.com/en-us/download/details.aspx?id=45333" target="_blank">Microsoft Power BI Analysis Services Connector</a> <br /><br />
+
+                You can also connect to the cube from Excel. Select Data->From other sources->From Analysis Services.<br /><br />
+
+                Connection strings for a SQL Server and SQL Server Analysis Services running in tabular mode must be defined in ConnectionStrings.config. The names are ExperienceExtractor.Sql and ExperienceExtractor.SsasTabular.
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" action="/sitecore/admin/experienceextractor/shell.aspx#yaml" target="ExperienceExtractorShell">
+                <input type="hidden" name="job" value="" />
+                <button type="submit" class='btn btn-primary execute-button'>Update shell</button>
+            </form>
+        </div>
+    </div>
+</div>

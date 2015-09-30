@@ -16,7 +16,9 @@ namespace ExperienceExtractor.Processing.DataSources
     /// Classes implementing this interface can be used to filter data from a <see cref="IDataSource"/>
     /// </summary>
     public interface IDataFilter
-    {        
+    {
+        bool IsStagingFilter { get; }
+
         /// <summary>
         /// Returns true if the item matches this filter; false, otherwise
         /// </summary>

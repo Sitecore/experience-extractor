@@ -72,7 +72,7 @@ namespace ExperienceExtractor.MongoDb.Filters
                 }                
 
                 var field = state.TryGet("Field", "StartDateTime");
-
+                
                 return new MongoDateRangeFilter(start, end, field);
             }            
         }

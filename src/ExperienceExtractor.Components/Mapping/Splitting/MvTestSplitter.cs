@@ -22,6 +22,6 @@ namespace ExperienceExtractor.Components.Mapping.Splitting
             base((s, p) => p.MvTest != null && p.MvTest.Id == testId, true, true, true)
         {
             TestId = testId;
-        }
+        }        
     }
 }

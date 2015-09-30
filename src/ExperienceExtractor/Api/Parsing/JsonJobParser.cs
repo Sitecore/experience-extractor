@@ -21,10 +21,7 @@ namespace ExperienceExtractor.Api.Parsing
 {
     public class JsonJobParser : JobParser
     {
-
         private JsonParseState _rootState;
-
-
         
         public JsonJobParser(JObject specification, ParseFactories configuration = null)
             : base(configuration)

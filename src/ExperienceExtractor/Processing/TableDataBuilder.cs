@@ -53,7 +53,10 @@ namespace ExperienceExtractor.Processing
         public override int? RowCount
         {
             get { return RowMap.Count; }
-        }        
+        }
+
+        public int RowsCreated { get; set; }
+        
         
 
         protected IKeyFactory KeyFactory { get; set; }        
@@ -64,7 +67,7 @@ namespace ExperienceExtractor.Processing
         protected FieldMapperIterator Iterator { get; private set; }
 
         private object[] _emptyRow;
-        private readonly List<Field> _fieldList = new List<Field>();
+        private readonly List<Field> _fieldList = new List<Field>();        
         private readonly List<KeyValuePair<int, int>> _parentReferenceIndices = new List<KeyValuePair<int, int>>();
         private readonly Dictionary<Field, int> _parentReferences = new Dictionary<Field, int>();
         private Field _hashKeyField;
@@ -150,6 +153,7 @@ namespace ExperienceExtractor.Processing
             else
             {
                 RowMap.Add(values, row = values);
+                ++RowsCreated;
             }
 
             return row;
@@ -178,6 +182,11 @@ namespace ExperienceExtractor.Processing
                     .ThenBy(f => f.Index)
                     .Select(f => f.Value)
                     .ToArray();
+
+
+
+            Schema.CalculatedFields =
+                FieldMappers.OfType<ICalculatedFieldContainer>().SelectMany(c => c.CalculatedFields).ToList();
 
             Iterator = new FieldMapperIterator(FieldMappers, Schema.Fields);
 
@@ -229,6 +238,8 @@ namespace ExperienceExtractor.Processing
             KeyFactory = keyFactory ?? Keys.KeyFactory.Default;            
             
             _fieldList.Add(_hashKeyField = KeyFactory.GetKeyField(Schema));
+            
+            _hashKeyField.Hide = true;
 
             UpdateSchema();
         }

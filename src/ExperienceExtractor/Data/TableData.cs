@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using ExperienceExtractor.Data.Schema;
 
 namespace ExperienceExtractor.Data
@@ -74,7 +75,7 @@ namespace ExperienceExtractor.Data
         /// Returns an implementation of <see cref="IDataReader"/> to read the rows in this tabe
         /// </summary>
         /// <returns></returns>
-        public IDataReader CreateReader()
+        public DbDataReader CreateReader()
         {
             return new TableDataReader(this);
         }

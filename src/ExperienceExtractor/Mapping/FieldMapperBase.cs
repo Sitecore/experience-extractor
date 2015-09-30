@@ -17,7 +17,7 @@ using ExperienceExtractor.Processing;
 
 namespace ExperienceExtractor.Mapping
 {
-    public abstract class FieldMapperBase : IFieldMapper
+    public abstract class FieldMapperBase : IFieldMapper, ICalculatedFieldContainer
     {
         private Field[] _fields;
 
@@ -25,6 +25,11 @@ namespace ExperienceExtractor.Mapping
         {
             get { return _fields; }
         }
+
+        public virtual IEnumerable<CalculatedField> CalculatedFields
+        {
+            get { yield break; }   
+        } 
 
         protected abstract IEnumerable<Field> CreateFields();
 

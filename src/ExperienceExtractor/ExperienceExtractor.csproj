@@ -75,7 +75,7 @@
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\components\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
@@ -83,7 +83,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Http, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\components\System.Web.Http.dll</HintPath>
     </Reference>
@@ -109,9 +109,15 @@
     <Compile Include="Api\Jobs\JobExecutionSettings.cs" />
     <Compile Include="Api\Jobs\JobStatus.cs" />
     <Compile Include="Api\Jobs\LocalJobRepository.cs" />
+    <Compile Include="Api\OData\EdmSchemaBuilder.cs" />
     <Compile Include="Api\Parsing\ParseFactoryParameterAttribute.cs" />
     <Compile Include="Api\Pipelines\ExperienceExtractorApiInitializer.cs" />
     <Compile Include="Api\Pipelines\XmlConfigHelpers.cs" />
+    <Compile Include="Data\Schema\CalculatedField.cs" />
+    <Compile Include="Data\Schema\TableDataHelpers.cs" />
+    <Compile Include="Data\WritableTableData.cs" />
+    <Compile Include="Export\BinaryDataPartition.cs" />
+    <Compile Include="Export\BinaryTableData.cs" />
     <Compile Include="Export\CsvExporter.cs" />
     <Compile Include="Export\CsvTableData.cs" />
     <Compile Include="Export\DataTableHelpers.cs" />
@@ -120,8 +126,10 @@
     <Compile Include="Export\ITableDataWriter.cs" />
     <Compile Include="Export\ITablePartitionSource.cs" />
     <Compile Include="Export\MergedTableData.cs" />
+    <Compile Include="Export\OutputFormat.cs" />
     <Compile Include="Export\TableDataBatchWriter.cs" />
     <Compile Include="Export\TablePartition.cs" />
+    <Compile Include="Mapping\ICalculatedFieldContainer.cs" />
     <Compile Include="Mapping\ILabelProvider.cs" />
     <Compile Include="Mapping\ItemDatabaseFieldLookup.cs" />
     <Compile Include="Mapping\LabeledFieldMapper.cs" />
@@ -132,6 +140,7 @@
     <Compile Include="Mapping\IItemFieldLookup.cs" />
     <Compile Include="Processing\DataSources\DataSourceBase.cs" />
     <Compile Include="Processing\DateTime\DateRangeFilter.cs" />
+    <Compile Include="Processing\IUpdatingTableDataPostProcessor.cs" />
     <Compile Include="Processing\Keys\ByteHelper.cs" />
     <Compile Include="Processing\Labels\LabelLoader.cs" />
     <Compile Include="Mapping\Splitting\MatrixTableMapper.cs" />

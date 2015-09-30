@@ -35,7 +35,7 @@ namespace ExperienceExtractor.Components.Parsing.Tables
             
             var extraFields = state.SelectMany("Fields").Select(parser.ParseFieldMapper);
 
-            var name = state.TryGet("Name", dimension.GetType().Name);
+            var name = state.TryGet("Name", XaTableMapper.SuggestFriendlyTableName(dimension.GetType().Name));
 
             return new XaTableMapper(dimension,
                 state.AffixName(name),

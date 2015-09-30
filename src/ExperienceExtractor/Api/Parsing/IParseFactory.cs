@@ -18,6 +18,7 @@ namespace ExperienceExtractor.Api.Parsing
 
     public interface IParseFactory<out TItem> : IParseFactory
     {
+        //TODO: parser is redundant. State contains that already.
         TItem Parse(JobParser parser, ParseState state);
     }
 }

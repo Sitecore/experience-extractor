@@ -30,7 +30,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Amo2Tabular">
+      <HintPath>..\components\Amo2Tabular.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AnalysisServices, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\components\Microsoft.AnalysisServices.DLL</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\components\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.Analytics">
       <HintPath>..\components\Sitecore.Analytics.dll</HintPath>
     </Reference>
@@ -74,6 +86,8 @@
     <Compile Include="Parsing\Fields\DateFieldFactory.cs" />
     <Compile Include="Parsing\Fields\DateTimeFieldFactoryBase.cs" />
     <Compile Include="Parsing\Fields\DimensionFactory.cs" />
+    <Compile Include="Parsing\Fields\ContactIdFactory.cs" />
+    <Compile Include="Parsing\Fields\PartitionFieldFactory.cs" />
     <Compile Include="Parsing\Fields\XaFactoryHelpers.cs" />
     <Compile Include="Parsing\Fields\XaFactsFieldFactory.cs" />
     <Compile Include="Parsing\Fields\XaFieldFactory.cs" />
@@ -87,19 +101,31 @@
     <Compile Include="Parsing\Fields\TypedFieldFactories.cs" />
     <Compile Include="Parsing\Filters\RulesFilterFactory.cs" />
     <Compile Include="Parsing\Helpers\Selectors.cs" />
+    <Compile Include="Parsing\JobLoaders\DirectJobLoaderFactory.cs" />
     <Compile Include="Parsing\PostProcessors\AccessPostProcessorFactory.cs" />
     <Compile Include="Parsing\PostProcessors\EdmFactory.cs" />
     <Compile Include="Parsing\PostProcessors\MsSqlFactory.cs" />
+    <Compile Include="Parsing\Splitters\FunnelFactory.cs" />
     <Compile Include="Parsing\Splitters\PageConditionSplitterFactories.cs" />
     <Compile Include="Parsing\Tables\DefaultTableFactory.cs" />
+    <Compile Include="Parsing\Tables\RowRepeater.cs" />
     <Compile Include="Parsing\Tables\XaTableFactory.cs" />
     <Compile Include="Parsing\Tables\MatrixFactory.cs" />
     <Compile Include="PostProcessors\AccessExporter.cs" />
-    <Compile Include="PostProcessors\EdmSchemaBuilder.cs" />
+    <Compile Include="PostProcessors\PartitionField.cs" />
+    <Compile Include="PostProcessors\SqlClearOptions.cs" />
     <Compile Include="PostProcessors\SqlExporter.cs" />
+    <Compile Include="Parsing\PostProcessors\MsSqlJobLoaderFactory.cs" />
+    <Compile Include="PostProcessors\SqlRecordAdapter.cs" />
+    <Compile Include="PostProcessors\SqlUpdateUtil.cs" />
+    <Compile Include="PostProcessors\SsasExporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ExperienceExtractor.Scheduling\ExperienceExtractor.Scheduling.csproj">
+      <Project>{50432DC8-1768-4194-B880-D72AD2CBCE1B}</Project>
+      <Name>ExperienceExtractor.Scheduling</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ExperienceExtractor\ExperienceExtractor.csproj">
       <Project>{86510453-48e1-40d6-9ab4-810e9e570833}</Project>
       <Name>ExperienceExtractor</Name>

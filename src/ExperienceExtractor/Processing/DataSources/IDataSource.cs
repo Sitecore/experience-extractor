@@ -37,5 +37,13 @@ namespace ExperienceExtractor.Processing.DataSources
         /// The argument to the event handler is the current number of items returned from the underlying data source
         /// </summary>
         event EventHandler<int> ItemLoaded;
+
+
+        //TODO: Figure out better name
+        /// <summary>
+        /// Adjusts filters to only include data >= lastSaveDate. This is used for incremental updates of postprocessor targets.
+        /// </summary>
+        /// <param name="lastSaveDate"></param>
+        void ApplyUpdateFilter(System.DateTime? lastSaveDate, System.DateTime? lastSaveDateEnd);
     } 
 }

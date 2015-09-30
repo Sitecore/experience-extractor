@@ -30,7 +30,7 @@ namespace ExperienceExtractor.Mapping.Time
 
         private DateFields _mapper;
 
-        public DateDimension(string fieldName, Func<ProcessingScope, DateTime?> selector, string tableName = null, bool inlineFields = false, bool useDateForKey = true, DateDetailLevel detailLevel = DateDetailLevel.Date, CultureInfo cultureInfo = null, SortOrder sort = SortOrder.Unspecified, bool key = false)
+        public DateDimension(string fieldName, Func<ProcessingScope, DateTime?> selector, string tableName = null, bool inlineFields = false, bool useDateForKey = true, DateDetailLevel detailLevel = DateDetailLevel.Date, CultureInfo cultureInfo = null, SortOrder sort = SortOrder.Ascending, bool key = false)
             : base(fieldName, tableName ?? fieldName, Enumerable.Empty<IFieldMapper>())
         {            
             _selector = selector;
@@ -49,7 +49,9 @@ namespace ExperienceExtractor.Mapping.Time
 
         protected override TableDataBuilder CreateLookupBuilder()
         {
-            return new SequenceTableDataBuilder<DateTime?>(TableName, _mapper);
+            var builder = new SequenceTableDataBuilder<DateTime?>(TableName, _mapper);
+            builder.Schema.TableType = "Date";
+            return builder;
         }
 
 
@@ -96,6 +98,7 @@ namespace ExperienceExtractor.Mapping.Time
                 var index = 0;
 
                 row[index++] = _owner._useDateForKey ? date.Date : (object)DateToInt(date.Date);
+                row[index++] = date.Date;
 
                 row[index++] = date.Year;
                 if (_owner._detailLevel > DateDetailLevel.Year)
@@ -140,7 +143,16 @@ namespace ExperienceExtractor.Mapping.Time
                         Name = keyName,
                         FieldType = FieldType.Key,
                         SortOrder = _owner._sort,
+                        Hide = true,
                         ValueType = _owner._useDateForKey ? typeof(DateTime) : typeof(int)
+                    };
+
+                yield return
+                    new Field
+                    {
+                        Name = "Date",
+                        FieldType = FieldType.Dimension,                        
+                        ValueType = typeof(DateTime)
                     };
 
                 
@@ -149,40 +161,43 @@ namespace ExperienceExtractor.Mapping.Time
                 if (_owner._detailLevel > DateDetailLevel.Year)
                 {
                     yield return
-                        new Field { Name = "Quarter", FieldType = FieldType.Dimension, ValueType = typeof(int) };
+                        new Field { Name = "Quarter", FieldType = FieldType.Dimension, ValueType = typeof(int), Hide = true, FriendlyName = "Quarter - Year number"};
                     yield return
                         new Field
                         {
                             Name = "QuarterLabel",
                             FieldType = FieldType.Label,
                             ValueType = typeof(string),
-                            SortBy = "Quarter"
+                            SortBy = "Quarter",
+                            FriendlyName = "Quarter - Year"
                         };
                     yield return
-                        new Field { Name = "QuarterNumber", FieldType = FieldType.Dimension, ValueType = typeof(int) };
+                        new Field { Name = "QuarterNumber", FieldType = FieldType.Dimension, ValueType = typeof(int), Hide = true, FriendlyName = "Quarter number"};
                     yield return
-                        new Field { Name = "QuarterName", FieldType = FieldType.Label, ValueType = typeof(string) };
+                        new Field { Name = "QuarterName", FieldType = FieldType.Label, ValueType = typeof(string), SortBy = "QuarterNumber", FriendlyName = "Quarter"};
                     if (_owner._detailLevel > DateDetailLevel.Quarter)
                     {
                         yield return
-                            new Field { Name = "Month", FieldType = FieldType.Dimension, ValueType = typeof(int) };
+                            new Field { Name = "Month", FieldType = FieldType.Dimension, ValueType = typeof(int), Hide = true, FriendlyName = "Month - Year key"};
                         yield return
                             new Field
                             {
                                 Name = "MonthLabel",
                                 FieldType = FieldType.Label,
                                 ValueType = typeof(string),
-                                SortBy = "Month"
+                                SortBy = "Month",
+                                FriendlyName = "Month - Year"
                             };
                         yield return
-                            new Field { Name = "MonthNumber", FieldType = FieldType.Dimension, ValueType = typeof(int) };
+                            new Field { Name = "MonthNumber", FieldType = FieldType.Dimension, ValueType = typeof(int), Hide=true, FriendlyName = "Month number"};
                         yield return
                             new Field
                             {
                                 Name = "MonthName",
                                 FieldType = FieldType.Label,
                                 ValueType = typeof(string),
-                                SortBy = "MonthNumber"
+                                SortBy = "MonthNumber",
+                                FriendlyName = "Month"
                             };
 
                         if (_owner._detailLevel > DateDetailLevel.Month)
@@ -193,7 +208,8 @@ namespace ExperienceExtractor.Mapping.Time
                                     Name = "ShortDateLabel",
                                     FieldType = FieldType.Label,
                                     ValueType = typeof(string),
-                                    SortBy = keyName
+                                    SortBy = keyName,
+                                    FriendlyName = "Short date"
                                 };
                             yield return
                                 new Field
@@ -201,19 +217,21 @@ namespace ExperienceExtractor.Mapping.Time
                                     Name = "LongDateLabel",
                                     FieldType = FieldType.Label,
                                     ValueType = typeof(string),
-                                    SortBy = keyName
+                                    SortBy = keyName,
+                                    FriendlyName = "Long date"
                                 };
                             yield return
-                                new Field { Name = "DayOfYear", FieldType = FieldType.Dimension, ValueType = typeof(int) };
+                                new Field { Name = "DayOfYear", FieldType = FieldType.Dimension, ValueType = typeof(int), FriendlyName = "Day of year"};
                             yield return
-                                new Field { Name = "Weekday", FieldType = FieldType.Dimension, ValueType = typeof(int) };
+                                new Field { Name = "Weekday", FieldType = FieldType.Dimension, ValueType = typeof(int), Hide = true};
                             yield return
                                 new Field
                                 {
                                     Name = "WeekdayName",
                                     FieldType = FieldType.Label,
                                     ValueType = typeof(string),
-                                    SortBy = "Weekday"
+                                    SortBy = "Weekday",
+                                    FriendlyName = "Day of week"
                                 };
                         }
                     }

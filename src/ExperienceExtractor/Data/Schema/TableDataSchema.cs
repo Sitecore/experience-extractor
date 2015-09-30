@@ -11,8 +11,10 @@
 // -------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ExperienceExtractor.Processing.Helpers;
+using Newtonsoft.Json;
 
 namespace ExperienceExtractor.Data.Schema
 {
@@ -23,14 +25,14 @@ namespace ExperienceExtractor.Data.Schema
     {
         /// <summary>
         /// The name of the table
-        /// </summary>
+        /// </summary>                
         public string Name { get; set; }
 
-        /// <summary>
+        /// <summary>        
         /// The key fields in this table with their index in the Fields list.
         /// </summary>
         public Indexed<Field>[] Keys { get; private set; }
-
+        
         /// <summary>
         /// The label fields in this table with their index in the Fields list.
         /// </summary>        
@@ -45,6 +47,18 @@ namespace ExperienceExtractor.Data.Schema
         /// The fact fields of this table with their index in the Fields list.
         /// </summary>        
         public Indexed<Field>[] Facts { get; private set; }
+
+
+        /// <summary>
+        /// Calculated fields for SSAS tabular.
+        /// </summary>
+        public List<CalculatedField> CalculatedFields { get; set; }
+
+
+        /// <summary>
+        /// A string describing the table type.
+        /// </summary>
+        public string TableType { get; set; }
 
         private Field[] _fields;
 
@@ -74,6 +88,7 @@ namespace ExperienceExtractor.Data.Schema
             Name = name;
             _fields = new Field[0];
             RelatedTables = new List<TableDataRelation>();
+            CalculatedFields = new List<CalculatedField>();
         }
 
 
@@ -123,6 +138,6 @@ namespace ExperienceExtractor.Data.Schema
         public bool FieldsAreEqual(TableDataSchema other)
         {
             return Fields.SequenceEqual(other.Fields);
-        }        
+        }
     }
 }

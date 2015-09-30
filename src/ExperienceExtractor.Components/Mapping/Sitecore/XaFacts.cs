@@ -23,6 +23,7 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
     public class XaFacts : FieldMapperBase
     {
         public FactTypes FactTypes { get; set; }
+        public Func<string, string> NameFormatter { get; set; }
         private readonly List<Field> _fields;
 
         public XaFacts(Func<string, string> nameFormatter = null, FactTypes factTypes = FactTypes.All)
@@ -30,15 +31,23 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
             FactTypes = factTypes;
             
             nameFormatter = nameFormatter ?? (name => name);
+            NameFormatter = nameFormatter;
         
             _fields = new List<Field>();
-            if( factTypes.HasFlag(FactTypes.Visits)) _fields.Add(new Field {Name = nameFormatter("Visits"), ValueType = typeof (int), FieldType = FieldType.Fact});
+            if( factTypes.HasFlag(FactTypes.Visits)) _fields.Add(new Field {Name = nameFormatter("Visits"), ValueKind = "Visits", ValueType = typeof (int), FieldType = FieldType.Fact});
             if (factTypes.HasFlag(FactTypes.Value)) _fields.Add(new Field { Name = nameFormatter("Value"), ValueType = typeof(int), FieldType = FieldType.Fact });
             if (factTypes.HasFlag(FactTypes.Bounces)) _fields.Add(new Field { Name = nameFormatter("Bounces"), ValueType = typeof(int), FieldType = FieldType.Fact });
             if (factTypes.HasFlag(FactTypes.Conversions)) _fields.Add(new Field { Name = nameFormatter("Conversions"), ValueType = typeof(int), FieldType = FieldType.Fact });
             if (factTypes.HasFlag(FactTypes.TimeOnSite)) _fields.Add(new Field { Name = nameFormatter("TimeOnSite"), ValueType = typeof(int), FieldType = FieldType.Fact });
             if (factTypes.HasFlag(FactTypes.PageViews)) _fields.Add(new Field { Name = nameFormatter("PageViews"), ValueType = typeof(int), FieldType = FieldType.Fact });
             if (factTypes.HasFlag(FactTypes.Count)) _fields.Add(new Field { Name = nameFormatter("Count"), ValueType = typeof(int), FieldType = FieldType.Fact });            
+        }
+
+        
+
+        public override IEnumerable<CalculatedField> CalculatedFields
+        {
+            get { return FactsMapper.GetCalculatedFields(NameFormatter, FactTypes); }
         }
 
 

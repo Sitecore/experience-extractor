@@ -22,8 +22,8 @@ namespace ExperienceExtractor.Tests.Support
 {
     class SimpleDataSource : DataSourceBase
     {
-        public override long? Count { get { return _src.Length; } }
-        
+        public override long? Count { get { return _src.Length; } }        
+
         private readonly IVisitAggregationContext[] _src;
 
         public SimpleDataSource(IEnumerable<IVisitAggregationContext> src)
@@ -35,6 +35,11 @@ namespace ExperienceExtractor.Tests.Support
         {
             return _src.GetEnumerator();
         }
-                
+
+
+        public override void ApplyUpdateFilter(DateTime? lastSaveDate, DateTime? lastSaveDateEnd)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

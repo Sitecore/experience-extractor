@@ -16,10 +16,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.ModelBinding;
 using Newtonsoft.Json.Linq;
 using ExperienceExtractor.Api.Http.Configuration;
 using ExperienceExtractor.Api.Jobs;
 using ExperienceExtractor.Api.Parsing;
+using Sitecore.Pipelines.Save;
 
 namespace ExperienceExtractor.Api.Http.Controllers
 {
@@ -40,8 +42,12 @@ namespace ExperienceExtractor.Api.Http.Controllers
         }
 
         // GET api/jobs
-        public IEnumerable<JobInfo> Get()
+        public IEnumerable<JobInfo> Get(string lockKey = null)
         {
+            if (lockKey != null)
+            {
+                return _repository.GetFromLockKey(lockKey).Select(info => UpdateResultUrl(info, false));
+            }
             return _repository.Get().Select(info=>UpdateResultUrl(info, false));
         }
 

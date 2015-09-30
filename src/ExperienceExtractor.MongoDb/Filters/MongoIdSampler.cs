@@ -22,6 +22,13 @@ namespace ExperienceExtractor.MongoDb.Filters
 {    
     public class MongoIdSampler
     {
+        public string Field { get; set; }
+
+        public MongoIdSampler()
+        {
+            Field = "_id";
+        }
+
         static bool IsMax(double percentage)
         {
             return percentage >= 1 - 1e-16;
@@ -69,10 +76,10 @@ namespace ExperienceExtractor.MongoDb.Filters
 
         public IMongoQuery GetIdRange(double start, double end)
         {
-            var query = Query.GTE("_id", PercentageToMongoId(start));
+            var query = Query.GTE(Field, PercentageToMongoId(start));
             if (!IsMax(end))
             {
-                query = Query.And(query, Query.LT("_id", PercentageToMongoId(end)));
+                query = Query.And(query, Query.LT(Field, PercentageToMongoId(end)));
             }
             return query;
         }
@@ -87,7 +94,9 @@ namespace ExperienceExtractor.MongoDb.Filters
                 var p = state.Require<double>("Percentage", mainParameter: true);
                 var offset = state.TryGet("Offset", 0d);
 
-                return new MongoRandomSampleFilter(Math.Max(0, offset), Math.Min(1, offset + p));
+                var filter = new MongoRandomSampleFilter(Math.Max(0, offset), Math.Min(1, offset + p));
+                
+                return filter;
             }
         }
     }

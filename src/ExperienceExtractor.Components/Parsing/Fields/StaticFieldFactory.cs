@@ -25,7 +25,21 @@ namespace ExperienceExtractor.Components.Parsing.Fields
         {
             var value = state.Require<string>("Value", true);
 
-            return new SimpleFieldMapper(state.TryGet("Name", value), scope => value, typeof (string), FieldType.Dimension);
+            SimpleFieldMapper mapper;
+
+            long longValue;
+            if (long.TryParse(value, out longValue))
+            {
+                mapper = new SimpleFieldMapper(state.TryGet("Name", value), scope => longValue, typeof (long), FieldType.Dimension);
+            }
+            else
+            {
+                mapper = new SimpleFieldMapper(state.TryGet("Name", value), scope => value, typeof (string), FieldType.Dimension);
+            }
+
+            mapper.Hide = state.Require<bool>("Hide", false);
+
+            return mapper;
         }
     }
 }

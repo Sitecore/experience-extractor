@@ -1,0 +1,20 @@
+@model RenderingModel
+
+@using Sitecore.Mvc
+@using Sitecore.Mvc.Presentation
+@using Sitecore.Web.UI.Controls.Common.UserControls
+@using Sitecore.Web.UI.Controls.Common.Renderings
+@using ExperienceExtractor.Api.Http.Configuration
+@{
+	var rendering = this.Html.Sitecore().Controls().GetUserControl(this.Model.Rendering);
+	var renderingId = rendering.ControlId;	
+	rendering.Requires.Script("client", "ExperienceExtractorStatus.js");
+		
+	rendering.Attributes["data-sc-extract-api"] = "/" + ExperienceExtractorWebApiConfig.JobApiRoute;
+	rendering.Class = "sc-experience-extractor sc-experience-extractor-status";
+	
+}
+<div @rendering.HtmlAttributes>	  
+	<div class='status-text'></div>
+	@Html.Sitecore().Controls().Rendering(Html, "{AF6438A4-8295-4925-90B3-2BF97D3515AF}", renderingId + "ProgressBar", "", new {Value=0})
+</div>             

@@ -16,6 +16,8 @@ using System.Linq;
 using ExperienceExtractor.Data.Schema;
 using ExperienceExtractor.Processing.Helpers;
 using ExperienceExtractor.Processing.Keys;
+using Sitecore.Analytics.Model.Framework;
+using Sitecore.Data.Indexing;
 
 namespace ExperienceExtractor.Data
 {
@@ -28,24 +30,15 @@ namespace ExperienceExtractor.Data
         private readonly IKeyFactory _rowHasher = new Fnv1a32();
 
         public RowComparer(TableDataSchema schema)
-        {
-            var fields = schema.Fields;
-
-            var keyType = fields.Any(f => f.FieldType == FieldType.Key) ? FieldType.Key : FieldType.Dimension;
-
-            //Order by fields where SortOrder is specified, then by keys (always order by something)
-            foreach (var ix in fields.AsIndexed().OrderBy(ix => ix.Value.SortOrder == SortOrder.Unspecified).ThenBy(ix => ix.Index))
+        {            
+            foreach (var field in GetSortFields(schema))
             {
-                var field = ix.Value;
-                if (field.SortOrder != SortOrder.Unspecified || field.FieldType == keyType)
-                {
-                    _comparers.Add(new ComparerWrapper(field.ValueType.GetComparer(),
-                        field.SortOrder == SortOrder.Descending)
-                        .AsIndexed<IComparer>(ix.Index));
-                }
-            }
+                _comparers.Add(new ComparerWrapper(field.Value.ValueType.GetComparer(),
+                    field.Value.SortOrder == SortOrder.Descending)
+                    .AsIndexed<IComparer>(field.Index));
+            }                   
 
-            _keys = fields.FindIndices(field => field.FieldType == keyType).Select(ix => ix.Index).ToArray();
+            _keys = schema.Fields.FindIndices(schema.IsKey).Select(ix => ix.Index).ToArray();
         }
 
         public bool Equals(object[] x, object[] y)
@@ -81,6 +74,21 @@ namespace ExperienceExtractor.Data
             }
 
             return 0;
+        }
+
+        public static IEnumerable<Indexed<Field>> GetSortFields(TableDataSchema schema)
+        {
+            var fields = schema.Fields;            
+
+            //Order by fields where SortOrder is specified, then by keys (always order by something)
+            foreach (var ix in fields.AsIndexed().OrderBy(ix => ix.Value.SortOrder == SortOrder.Unspecified).ThenBy(ix => ix.Index))
+            {
+                var field = ix.Value;
+                if (field.SortOrder != SortOrder.Unspecified || schema.IsKey(field))
+                {
+                    yield return ix;
+                }
+            }
         }
 
         class ComparerWrapper : IComparer

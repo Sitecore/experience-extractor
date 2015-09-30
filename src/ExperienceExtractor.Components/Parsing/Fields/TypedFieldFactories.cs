@@ -62,6 +62,11 @@ namespace ExperienceExtractor.Components.Parsing.Fields
             {
                 get { return "Item.Id"; }
             }
+
+            public override string DefaultName
+            {
+                get { return "ItemId"; }
+            }
         }        
 
         [ParseFactory("event", "Includes a property of the current event in scope as a column in the table")]
@@ -80,10 +85,12 @@ namespace ExperienceExtractor.Components.Parsing.Fields
         {
 
             public virtual string SuggestName(string suggestedName)
-            {
+            {                
                 return suggestedName;
             }
             public virtual string DefaultPath { get { return ""; } }
+
+            public virtual string DefaultName { get { return null; } }
 
             public virtual T SelectItem(ProcessingScope scope)
             {
@@ -101,7 +108,7 @@ namespace ExperienceExtractor.Components.Parsing.Fields
                 
                 var getter = parser.CompileGetter(typeof (T), selector);
 
-                var name = state.TryGet("Name", SuggestName(getter.SuggestedName));
+                var name = state.TryGet("Name", DefaultName ?? SuggestName(getter.SuggestedName));
                 var fieldType = (FieldType) Enum.Parse(typeof(FieldType), state.TryGet("Type", "Dimension"), true);
 
 

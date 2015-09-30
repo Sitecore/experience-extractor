@@ -26,7 +26,7 @@ namespace ExperienceExtractor.Mapping
         /// The fields provided for a table by this <see cref="IFieldMapper"/>
         /// After initialization these must not change.
         /// </summary>
-        IList<Field> Fields { get; }
+        IList<Field> Fields { get; }        
         
         /// <summary>
         /// Sets the values in a row for the fields provided by this <see cref="IFieldMapper"/>

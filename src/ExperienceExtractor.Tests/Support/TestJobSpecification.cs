@@ -66,6 +66,13 @@ namespace ExperienceExtractor.Tests.Support
             return _exporter;
         }
 
+        public IList<TableData> Load(string tempPath)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string LockKey { get; set; }
+
         public void Initialize(Job job)
         {
             

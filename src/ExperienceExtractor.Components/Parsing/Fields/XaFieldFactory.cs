@@ -31,7 +31,7 @@ namespace ExperienceExtractor.Components.Parsing.Fields
 
 
             return new LabeledFieldMapper(new XaFieldMapper(dimension, false, keyName), labelName, 
-                XaLabelProvider.FromDimension(dimension, parser.DefaultLanguage));
-        }
+                XaLabelProvider.FromDimension(dimension, parser.DefaultLanguage), friendlyName: XaFieldMapper.SuggestFriendlyLabelName(labelName));
+        }        
     }
 }

@@ -38,6 +38,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.AnalysisServices, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\components\Microsoft.AnalysisServices.DLL</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Sitecore.Mvc">
       <HintPath>..\components\Sitecore.Mvc.dll</HintPath>
@@ -104,6 +109,10 @@
       <Project>{efb2f971-0f79-47d0-a9bc-62fd0c3443c1}</Project>
       <Name>ExperienceExtractor.MongoDb</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ExperienceExtractor.Scheduling\ExperienceExtractor.Scheduling.csproj">
+      <Project>{50432dc8-1768-4194-b880-d72ad2cbce1b}</Project>
+      <Name>ExperienceExtractor.Scheduling</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ExperienceExtractor\ExperienceExtractor.csproj">
       <Project>{86510453-48e1-40d6-9ab4-810e9e570833}</Project>
       <Name>ExperienceExtractor</Name>
@@ -112,6 +121,15 @@
   <ItemGroup>
     <Content Include="sitecore\shell\client\Applications\ExperienceExtractor\Dimensions.cshtml" />
     <Content Include="sitecore\shell\client\Applications\ExperienceExtractor\Filters.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="web.config" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

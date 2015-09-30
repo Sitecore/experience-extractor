@@ -20,6 +20,7 @@ using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Data.Managers;
 using Sitecore.Rules;
+using Sitecore.SecurityModel;
 
 namespace ExperienceExtractor.Components.Parsing.Filters
 {
@@ -29,51 +30,56 @@ namespace ExperienceExtractor.Components.Parsing.Filters
     {
         public IDataFilter Parse(JobParser parser, ParseState state)
         {
-            var ruleContextItem = parser.Database.GetRootItem(parser.DefaultLanguage);
-
-            var json = state.TryGet<string>("Rule");
-            if (!string.IsNullOrEmpty(json))
+            using (new SecurityDisabler())
             {
-                var filter = RulesFilter.FromString(json);
-                filter.RuleContextItem = ruleContextItem;
-                return filter;
-            }
+                var ruleContextItem = parser.Database.GetRootItem(parser.DefaultLanguage);
 
-            var ruleItem = state.Require<string>("Item", true);
-            Item item;
-            ID id;
-            if (!ID.TryParse(ruleItem, out id))
-            {
-                if (!ruleItem.StartsWith("/"))
+                var json = state.TryGet<string>("Rule");
+                if (!string.IsNullOrEmpty(json))
                 {
-                    var rootItem =
-                        state.Parser.Database.GetItem(
-                            ExperienceExtractorApiContainer.ItemPaths.GetOrDefault("experienceAnalyticsFilters") ??
-                            "/sitecore/system/Marketing Control Panel/Experience Analytics/Filters");
-
-                    ruleItem = rootItem.Paths.FullPath + "/" + ruleItem;
+                    var filter = RulesFilter.FromString(json);
+                    filter.RuleContextItem = ruleContextItem;
+                    return filter;
                 }
 
 
-                item = parser.Database.GetItem(ruleItem, parser.DefaultLanguage);
-            }
-            else
-            {
-                item = parser.Database.GetItem(id, parser.DefaultLanguage);    
-            }
+                var ruleItem = state.Require<string>("Item", true);
+                Item item;
+                ID id;
+                if (!ID.TryParse(ruleItem, out id))
+                {
+                    if (!ruleItem.StartsWith("/"))
+                    {
+                        var rootItem =
+                            state.Parser.Database.GetItem(
+                                ExperienceExtractorApiContainer.ItemPaths.GetOrDefault("experienceAnalyticsFilters") ??
+                                "/sitecore/system/Marketing Control Panel/Experience Analytics/Filters");
 
-            
-            if (item == null)
-            {
-                throw ParseException.AttributeError(state, string.Format("Rule item not found '{0}'", ruleItem));
+                        ruleItem = rootItem.Paths.FullPath + "/" + ruleItem;
+                    }
+
+
+                    item = parser.Database.GetItem(ruleItem, parser.DefaultLanguage);
+                }
+                else
+                {
+                    item = parser.Database.GetItem(id, parser.DefaultLanguage);
+                }
+
+
+
+                if (item == null)
+                {
+                    throw ParseException.AttributeError(state, string.Format("Rule item not found '{0}'", ruleItem));
+                }
+
+                var rules = RuleFactory.GetRules<RuleContext>(item.Fields["Rule"]);
+
+                return new RulesFilter(rules)
+                {
+                    RuleContextItem = ruleContextItem
+                };
             }
-
-            var rules = RuleFactory.GetRules<RuleContext>(item.Fields["Rule"]);
-
-            return new RulesFilter(rules)
-            {
-                RuleContextItem = ruleContextItem
-            };
         }
     }
 }

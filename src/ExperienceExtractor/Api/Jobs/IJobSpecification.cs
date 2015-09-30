@@ -11,6 +11,7 @@
 // -------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using ExperienceExtractor.Data;
 using ExperienceExtractor.Export;
 using ExperienceExtractor.Mapping;
 using ExperienceExtractor.Processing;
@@ -20,7 +21,7 @@ using Sitecore.Globalization;
 namespace ExperienceExtractor.Api.Jobs
 {
     public interface IJobSpecification
-    {
+    {       
         Language DefaultLanguage { get; }
 
         IDataSource CreateDataSource();
@@ -31,6 +32,10 @@ namespace ExperienceExtractor.Api.Jobs
 
         ITableDataExporter CreateExporter(string tempPath);
 
-        void Initialize(Job job);               
+        IList<TableData> Load(string tempPath);
+
+        void Initialize(Job job);
+
+        string LockKey { get; }
     }
 }

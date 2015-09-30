@@ -11,6 +11,7 @@
 // -------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using ExperienceExtractor.Data.Schema;
 
 namespace ExperienceExtractor.Mapping
 {
@@ -39,7 +40,7 @@ namespace ExperienceExtractor.Mapping
         {
             Name = name;
             FieldMappers = new List<IFieldMapper>();
-            TableMappers = new List<ITableMapper>();
+            TableMappers = new List<ITableMapper>();        
         }
     }
 }

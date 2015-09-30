@@ -33,6 +33,8 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
         /// </summary>        
         public Item RuleContextItem { get; set; }
 
+        public bool IsStagingFilter { get { return false; } }
+
         public RulesFilter(RuleList<RuleContext> rules)
         {            
             _rules = rules;        

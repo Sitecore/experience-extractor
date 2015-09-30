@@ -75,7 +75,7 @@ namespace ExperienceExtractor.Mapping.Time
 
                 var index = 0;
 
-                row[index++] = _owner._useTimeForKey ? time : (object)TimeToInt(time);
+                row[index++] = _owner._useTimeForKey ? time : (object)TimeToInt(time);                
 
                 row[index++] = time.Hours;
                 row[index++] = new DateTime().Add(time).ToString("t", _owner._cultureInfo);
@@ -111,11 +111,12 @@ namespace ExperienceExtractor.Mapping.Time
                     {
                         Name = keyName,
                         FieldType = FieldType.Key,
+                        Hide=true,
                         //SortOrder =  ? SortOrder.Ascending : SortOrder.Unspecified,
                         ValueType = _owner._useTimeForKey ? typeof(TimeSpan) : typeof(int)
                     };
 
-
+                
                 yield return
                     new Field
                     {
@@ -130,7 +131,8 @@ namespace ExperienceExtractor.Mapping.Time
                         Name = "Label",
                         FieldType = FieldType.Label,
                         ValueType = typeof(string),
-                        SortBy = keyName
+                        SortBy = keyName,
+                        FriendlyName = "Time of day"
                     };
                 if (_owner._detailLevel > TimeDetailLevel.Hour)
                 {

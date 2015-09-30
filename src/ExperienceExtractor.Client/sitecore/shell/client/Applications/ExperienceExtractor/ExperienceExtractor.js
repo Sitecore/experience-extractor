@@ -15,7 +15,7 @@ define(["sitecore", "jquery"], function (Sitecore, $) {
 		.appendTo("head");
 
 	var xaDimensionConfig = {
-		tableDimensions: ["Pages/By Page", "Pages/By Page URL"],
+	    tableDimensions: ["Pages/By Page", "Pages/By Page URL", "Visits/By Goal"],
 		extractDimensionTables: {
 			"Geo": ["Visits/By Country", "Visits/By Region", "Visits/By City"]
 		},

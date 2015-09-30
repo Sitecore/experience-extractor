@@ -10,8 +10,13 @@
 // and limitations under the License.
 // -------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
+using ExperienceExtractor.MongoDb.Filters;
+using MongoDB.Bson;
 using MongoDB.Driver.Builders;
 using Sitecore.Analytics.Aggregation;
 using Sitecore.Analytics.Data.DataAccess.MongoDb;
@@ -25,26 +30,53 @@ namespace ExperienceExtractor.MongoDb
     public class MongoDbVisitAggregationContextSource : MongoDbDataSource<VisitData>
     {
         private readonly MongoDbDriver _driver;
-       
-        public MongoDbVisitAggregationContextSource(MongoDbDriver driver, int threads = 2) : base(driver.Interactions, threads)
+
+        public MongoDbVisitAggregationContextSource(MongoDbDriver driver, int threads = 2)
+            : base(driver.Interactions, threads)
         {
             _driver = driver;
         }
 
-        protected override object Adapt(VisitData item)
+
+        public override void ApplyUpdateFilter(DateTime? lastSaveDate, DateTime? lastSaveDateEnd)
         {
-            return new MongoDbAggregationContext(_driver, item);
+            var remove = Filters.Where(filter => filter.IsStagingFilter).ToList();
+
+            foreach (var filter in remove)
+            {
+                Filters.Remove(filter);
+            }
+
+            if (lastSaveDate.HasValue)
+            {
+                //DateRangeFilter is staging filter.
+                Filters.Add(new MongoDateRangeFilter(lastSaveDate.Value.ToLocalTime(), lastSaveDateEnd, "SaveDateTime"));
+            }
         }
 
+
+        protected override object Adapt(VisitData item)
+        {            
+            if( item.Pages == null) item.Pages = new List<PageData>();
+            foreach (var page in item.Pages)
+            {
+                if (page.PageEvents == null)
+                {
+                    page.PageEvents = new List<PageEventData>();
+                }
+            }
+
+            return new MongoDbAggregationContext(_driver, item);
+        }
 
         [ParseFactory("xdb",
             "MongoDB xDB connection",
             "Loads IVisitAggregationContexts from xDB limited by the filters specified"),
-            
+
             ParseFactoryParameter("Connection", typeof(string),
                             "MongoDB connection string or name of connection string defined in <connectionStrings />"
                             , "The connection string defined in Experience Extractor's config file", true),
-                        
+
             ParseFactoryParameter("Filters", typeof(IEnumerable<IDataFilter>),
                             "Filters to limit the visits to extract"),
 
@@ -56,7 +88,7 @@ namespace ExperienceExtractor.MongoDb
             ]
 
         public class Factory : IParseFactory<IDataSource>
-        {            
+        {
             public IDataSource Parse(JobParser parser, ParseState state)
             {
                 var connectionString = state.TryGet("connection", ExperienceExtractorWebApiConfig.XdbConnectionString, true);
@@ -72,6 +104,8 @@ namespace ExperienceExtractor.MongoDb
                 }
 
                 var source = new MongoDbVisitAggregationContextSource(new MongoDbDriver(connectionString), ExperienceExtractorWebApiConfig.JobExecutionSettings.LoadThreads);
+
+                //source.SecondaryLookup = state.TryGet("SecondaryLookup", false);
 
                 var index = state.TryGet<string>("index");
                 if (!string.IsNullOrEmpty(index))
@@ -95,14 +129,15 @@ namespace ExperienceExtractor.MongoDb
                     source.CursorInitializing += (sender, cursor) => cursor.SetFields(fields);
                 }
 
+
                 foreach (var filter in state.SelectMany("Filters"))
                 {
                     source.Filters.Add(parser.ParseDataFilter(filter));
-                }
+                }              
 
                 return source;
             }
-            
+
         }        
     }
 }

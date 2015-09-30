@@ -11,6 +11,7 @@
 // -------------------------------------------------------------------------------------------
 
 using System;
+using System.IO;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -31,6 +32,11 @@ namespace ExperienceExtractor.Api.Jobs
 
         [DataMember]
         public long ItemsProcessed { get; set; }
+
+        [DataMember]
+        public long RowsCreated { get; set; }
+
+
         [DataMember]
         public double? Progress { get; set; }
 
@@ -65,10 +71,12 @@ namespace ExperienceExtractor.Api.Jobs
                 Created = job.Created,
                 Ended = job.EndDate,
                 ItemsProcessed = job.ItemsProcessed,
+                RowsCreated = job.RowsCreated,
                 LastException = job.LastException != null ? job.LastException.ToString() : null,
                 Progress = job.Progress,
                 Status = job.Status,
                 StatusText = job.StatusText,
+                HasResult = Directory.Exists(job.TempDirectory) && job.Status == JobStatus.Completed,
                 Specification = job.Specification != null ? job.Specification.ToString() : null,
                 SizeLimitExceeded = job.SizeLimitExceeded,
                 Id = job.Id

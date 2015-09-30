@@ -14,10 +14,11 @@
 
 <%@ Page Language="C#" AutoEventWireup="true" Inherits="Sitecore.sitecore.admin.AdminPage" %>
 <%@ Import Namespace="ExperienceExtractor.Api.Http.Configuration" %>
+<%@ Import Namespace="ExperienceExtractor.Api.Http" %>
 <script runat="server">
 	protected void Page_Load(object sender, EventArgs e)
     {
-	    if (!ExperienceExtractorWebApiConfig.AllowAnonymousAccess)
+	    if (!RequireSitecoreLoginAttribute.CheckSecurity())
 	    {
 	        CheckSecurity();
 	    }

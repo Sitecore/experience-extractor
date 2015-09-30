@@ -13,6 +13,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ExperienceExtractor.Components.Parsing.Fields;
 using ExperienceExtractor.Mapping;
 using ExperienceExtractor.Processing;
 using Sitecore.Analytics.Aggregation.Data.Model;
@@ -29,7 +30,7 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
             string keyName = null, string labelName = null, ILabelProvider labelProvider = null,            
             IEnumerable<IFieldMapper> additionalFields = null, FactTypes factTypes = FactTypes.All)
         {
-            var defintion = new TableDefinition(tableName ?? dimension.GetType().Name);
+            var defintion = new TableDefinition(tableName);
 
             Dimension = dimension;
 
@@ -38,7 +39,7 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
             defintion.FieldMappers.Add(new FieldMapperSet(dimensionTableName, dimensionTableName == null,
                 new[]
                 {
-                    new LabeledFieldMapper(new XaDimensionDataMapper(dimension, !hashKey, keyName), labelName, labelProvider)
+                    new LabeledFieldMapper(new XaDimensionDataMapper(dimension, !hashKey, keyName), labelName, labelProvider, friendlyName: XaFieldMapper.SuggestFriendlyLabelName(labelName))
                 }));
 
             defintion.FieldMappers.Add(new XaFacts(factTypes: factTypes));
@@ -52,6 +53,16 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
             }
             
             TableDefinitions.Add(defintion);
+        }
+
+        public static string SuggestFriendlyTableName(string dimensionName)
+        {
+            if (dimensionName.StartsWith("By"))
+            {
+                return dimensionName.Substring(2);
+            }
+
+            return dimensionName;
         }
 
         protected override IEnumerable SelectRowItems(ProcessingScope context)
@@ -68,7 +79,7 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
 
         class XaDimensionDataMapper : XaFieldMapper
         {
-            public XaDimensionDataMapper(IDimension dimension, bool primaryKey = false, string keyName = null) : base(dimension, primaryKey, keyName)
+            public XaDimensionDataMapper(IDimension dimension, bool primaryKey = false, string keyName = null, string friendlyName = null) : base(dimension, primaryKey, keyName, friendlyName)
             {
 
             }
@@ -76,7 +87,7 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
             protected override DimensionData GetDimensionDataFromContext(ProcessingScope context)
             {
                 return context.Current<DimensionData>();                
-            }
+            }            
         }
     }
 }

@@ -11,6 +11,7 @@
 // -------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace ExperienceExtractor.Data.Schema
 {
@@ -31,7 +32,7 @@ namespace ExperienceExtractor.Data.Schema
 
         /// <summary>
         /// The table
-        /// </summary>
+        /// </summary>      
         public TableDataSchema RelatedTable { get; set; }
 
         /// <summary>

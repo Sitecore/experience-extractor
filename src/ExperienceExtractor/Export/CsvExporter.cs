@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Linq;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -33,18 +34,24 @@ namespace ExperienceExtractor.Export
     /// Persists table data as CSV files
     /// </summary>
     public class CsvExporter : ITableDataExporter, ITablePartitionSource
-    {        
+    {
 
         public string Directory { get; set; }
         public string Delimiter { get; set; }
+        public bool BinaryPartitions { get; set; }
+        public bool BinaryOutput { get; set; }
+        public bool KeepOutput { get; set; }
         public string PartitionPrefix { get; set; }
 
         private readonly CultureInfo _numberCulture;
 
-        public CsvExporter(string directory, string delimiter = "\t", CultureInfo numberCulture = null)
+        public CsvExporter(string directory, string delimiter = "\t", CultureInfo numberCulture = null, bool binaryPartitions = true, bool binaryOutput = false, bool keepOutput = true)
         {
             Directory = directory;
             Delimiter = delimiter;
+            BinaryPartitions = binaryPartitions;
+            BinaryOutput = binaryOutput;
+            KeepOutput = keepOutput;
             PartitionPrefix = "~";
 
             _numberCulture = numberCulture ?? CultureInfo.GetCultureInfo("en-US");
@@ -57,7 +64,7 @@ namespace ExperienceExtractor.Export
                 System.IO.Directory.CreateDirectory(Directory);
             }
 
-            var csvTables = new List<TableData>();
+            var csvTables = new List<WritableTableData>();
             foreach (var table in tables)
             {
                 var writer = CreateTableData(table.Schema,
@@ -71,8 +78,12 @@ namespace ExperienceExtractor.Export
             return csvTables;
         }
 
-        private CsvTableData CreateTableData(TableDataSchema schema, string path)
+        private WritableTableData CreateTableData(TableDataSchema schema, string path)
         {
+            if (BinaryOutput)
+            {
+                return new BinaryTableData(schema, path.Replace(".txt", ".bin"));
+            }
             return new CsvTableData(schema, path,
                 Delimiter, _numberCulture);
         }
@@ -120,7 +131,9 @@ namespace ExperienceExtractor.Export
         private int _nextPartition;
         public TablePartition CreatePartition()
         {
-            return new CsvPartition(Path.Combine(Directory, PartitionPrefix + _nextPartition++), this);
+            return BinaryPartitions
+                ? new BinaryDataPartition(Path.Combine(Directory, PartitionPrefix + _nextPartition++))
+                : (TablePartition)new CsvPartition(Path.Combine(Directory, PartitionPrefix + _nextPartition++), this);
         }
 
         class CsvPartition : TablePartition
@@ -151,11 +164,19 @@ namespace ExperienceExtractor.Export
             }
 
             public override void Dispose()
-            {                
+            {
                 if (System.IO.Directory.Exists(Directory))
                 {
                     System.IO.Directory.Delete(Directory, true);
                 }
+            }
+        }
+
+        public void Dispose()
+        {
+            if (!KeepOutput && System.IO.Directory.Exists(Directory))
+            {
+                System.IO.Directory.Delete(Directory, true);
             }
         }
     }

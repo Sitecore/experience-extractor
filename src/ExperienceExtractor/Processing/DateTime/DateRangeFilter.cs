@@ -26,6 +26,8 @@ namespace ExperienceExtractor.Processing.DateTime
             End = end;        
         }
 
+        public override bool IsStagingFilter { get { return true; } }
+
         protected override bool Include(IVisitAggregationContext item)
         {
             if (item == null) return false;

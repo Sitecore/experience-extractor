@@ -1,25 +1,9 @@
-<?xml version="1.0"?>
-<!--
-
-Copyright 2015 Sitecore Corporation A/S
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
-except in compliance with the License. You may obtain a copy of the License at
-	http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under the 
-License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
-either express or implied. See the License for the specific language governing permissions 
-and limitations under the License.
-
--->
-
-<!-- Change site to your site with Experience Extractor items -->
-<project site="develop.officecore.net" format="Zip Package">
+<project site="sc80rev150427" format="Zip Package">
   <Metadata>
     <metadata>
       <PackageName>Sitecore Experience Extractor</PackageName>
       <Author>Sitecore Corporation</Author>
-      <Version>0.2.0</Version>
+      <Version>0.3.0</Version>
       <Revision />
       <License>Copyright 2015 Sitecore Corporation A/S&lt;br /&gt;
 &lt;br /&gt;
@@ -53,6 +37,20 @@ https://github.com/Sitecore/experience-extractor</Comment>
         <x-item>/core/sitecore/client/Applications/ExperienceExtractor/Renderings/ExperienceExtractorFilter/ExperienceExtractorFilter-Parameters/{497599DD-2D07-4D12-AE1A-1B20E2A53088}/invariant/0</x-item>
         <x-item>/core/sitecore/client/Applications/ExperienceExtractor/Renderings/ExperienceExtractorFilter/ExperienceExtractorFilter-Parameters/__Standard Values/{69B24B4C-9D03-43B4-8AE4-98C430C81DBE}/invariant/0</x-item>
         <x-item>/core/sitecore/client/Applications/Launchpad/PageSettings/Buttons/Tools/Experience Extractor/{A3ED4683-BC82-4F9F-BB32-B604A2276DDA}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/System/Experience Extractor/{AAA789A9-1C17-4F99-A8B7-3810B2B1633F}/invariant/0</x-item>
+        <x-item>/master/sitecore/system/Marketing Control Panel/Experience Extractor/{F9C4EFC9-7BE2-460E-8EC2-C16C9AD132E4}/invariant/0</x-item>
+        <x-item>/master/sitecore/system/Marketing Control Panel/Experience Extractor/Scheduled jobs/{C12F0F74-AFC8-4DE2-ADBE-36AF552DAC7C}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/System/Experience Extractor/Scheduled job/{F4F459A3-09DF-4BFA-9083-8749AD53235F}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/System/Experience Extractor/Scheduled job/Data/{C3A2943F-C271-4E4F-9588-CAB0897E538D}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/System/Experience Extractor/Scheduled job/__Standard Values/{958BDEE1-59E6-409B-B31D-DFC357529648}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/System/Experience Extractor/Scheduled job/Statistics/{F5F4B5AF-8BBF-40AC-9E52-C99482C9B7A4}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/System/Experience Extractor/Scheduled job/Data/Type/{7891ABBD-F082-4790-912B-CB4CFF1A8EBE}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/System/Experience Extractor/Scheduled job/Data/Specification/{2EA9071B-F9D6-494E-92A1-836FD41287C2}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/System/Experience Extractor/Scheduled job/Data/Update interval/{C469BF05-BF04-4D3B-9C8D-D160AB63F03B}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/System/Experience Extractor/Scheduled job/Data/Suspended/{6B3A2555-1FC6-4411-8DFF-21A49813CDED}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/System/Experience Extractor/Scheduled job/Statistics/Last run/{75595E32-7421-4312-8BFF-1922EE94B6CB}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/System/Experience Extractor/Scheduled job/Statistics/Last success/{5ABD126E-0230-425F-94C6-248B5F9B4833}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/System/Experience Extractor/Scheduled job/Statistics/Last status/{235BBE22-19A4-4920-9480-0ADDAEB0D3FB}/invariant/0</x-item>
       </Entries>
       <SkipVersions>False</SkipVersions>
       <Converter>
@@ -99,6 +97,10 @@ https://github.com/Sitecore/experience-extractor</Comment>
         <x-item>/bin/System.Spatial.xml</x-item>
         <x-item>/bin/System.Spatial.dll</x-item>
         <x-item>/App_Config/Include/ExperienceExtractor/ExperienceExtractor.config</x-item>
+        <x-item>/bin/Amo2Tabular.dll</x-item>
+        <x-item>/bin/Microsoft.AnalysisServices.DLL</x-item>
+        <x-item>/bin/ExperienceExtractor.Scheduling.dll</x-item>
+        <x-item>/bin/ExperienceExtractor.Scheduling.pdb</x-item>
       </Entries>
       <Converter>
         <FileToEntryConverter>

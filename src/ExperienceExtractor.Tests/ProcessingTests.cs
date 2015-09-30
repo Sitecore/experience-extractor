@@ -9,6 +9,8 @@
 // either express or implied. See the License for the specific language governing permissions 
 // and limitations under the License.
 // -------------------------------------------------------------------------------------------
+
+using System;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -136,13 +138,30 @@ namespace ExperienceExtractor.Tests
         public void NestedChildTablesWithBatchingInCsv()
         {
             var csvDir = Path.Combine(Directory.GetCurrentDirectory(), "~tmp");
-            if( Directory.Exists(csvDir)) Directory.Delete(csvDir, true);
+            if (Directory.Exists(csvDir)) Directory.Delete(csvDir, true);
 
-            var csv = new CsvExporter(csvDir);
-            
+            var csv = new CsvExporter(csvDir, binaryPartitions:true);
+
             var batchWriter = new TableDataBatchWriter(csv);
 
-            var tables = TestSets.Countries(1000, 37).Process(
+            //1000 visits.
+            //1 row in Test per visit
+            //3 rows in Events per visit
+            //3 rows in Pages per visit
+            //1 row in Pages2 per visit
+            //--------------------------
+            //8 rows per visit = 80000 in total
+
+            //Batch size 26672 (ceiling(1000/3) visits) gives two disk partitions with 26672 and one with 26656 in memory
+
+            var visitCount = 1000;
+            var rowsPerVisit = 8;
+            var visitPerBatch = (int)Math.Ceiling(visitCount / 3d);
+            var rowsPerFilePartition = visitPerBatch * rowsPerVisit;
+            var eventRowsPerVisit = 3;
+            var expectedFilePartitions = 2;
+
+            var tables = TestSets.Countries(visitCount, 37).Process(
                 () => new SimpleTableMapper(new TableDefinition("Test")
                     .Key("VisitId", s => s.Current<IVisitAggregationContext>().Visit.InteractionId)
                     .Fact("Value", s => s.Current<IVisitAggregationContext>().Visit.Value)
@@ -160,19 +179,25 @@ namespace ExperienceExtractor.Tests
                 initializer: p =>
                 {
                     p.BatchWriter = batchWriter;
-                    p.BatchSize = 1002;
+                    p.BatchSize = rowsPerFilePartition;
                 });
 
 
             var partitions = new DirectoryInfo(csvDir).GetDirectories().Length;
 
-            Assert.AreEqual(2, partitions, "3000 events should create 2 file partitions and one in memory");
-            Assert.AreEqual(2004, batchWriter.Tables.FirstOrDefault(t => t.Schema.Name == "Events").Rows.Count(), "2004 rows in file partitions");
-            Assert.AreEqual(3000, tables.FirstOrDefault(t => t.Schema.Name == "Events").Rows.Count(), "3000 rows in file + memory partitions");
+            Assert.AreEqual(2, partitions, string.Format("{0:N0} rows should create 2 file partitions and one in memory", visitCount * rowsPerVisit));
+            Assert.AreEqual(expectedFilePartitions * eventRowsPerVisit * visitPerBatch, batchWriter.Tables.FirstOrDefault(t => t.Schema.Name == "Events").Rows.Count(),
+                string.Format("{0:N0} rows in event tables in file partitions", expectedFilePartitions * eventRowsPerVisit * visitPerBatch));
+
+            Assert.AreEqual(expectedFilePartitions * rowsPerVisit * visitPerBatch, batchWriter.Tables.Sum(t => t.Rows.Count()),
+                string.Format("{0:N0} total rows in file partitions", expectedFilePartitions * rowsPerVisit * visitPerBatch));
+
+            Assert.AreEqual(visitCount*rowsPerVisit, tables.Sum(t => t.Rows.Count()), 
+                string.Format("{0:N0} rows in file + memory partitions", visitCount*rowsPerVisit));
 
             //Merge partitions
             tables = csv.Export(tables);
-            
+
 
             //Delete partitions
             batchWriter.Dispose();

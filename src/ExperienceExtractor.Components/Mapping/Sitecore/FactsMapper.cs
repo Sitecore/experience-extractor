@@ -37,22 +37,27 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
             FactTypes = factTypes;
         }
 
+        public override IEnumerable<CalculatedField> CalculatedFields
+        {
+            get { return GetCalculatedFields(NameFormatter, FactTypes); }
+        }
+
         protected override IEnumerable<Field> CreateFields()
         {
-            if (FactTypes.HasFlag(FactTypes.Visits)) yield return new Field { Name = NameFormatter("Visits"), ValueType = typeof(int), FieldType = FieldType.Fact };
-            if (FactTypes.HasFlag(FactTypes.Value)) yield return new Field { Name = NameFormatter("Value"), ValueType = typeof(int), FieldType = FieldType.Fact };
-            if (FactTypes.HasFlag(FactTypes.Bounces)) yield return new Field { Name = NameFormatter("Bounces"), ValueType = typeof(int), FieldType = FieldType.Fact };
-            if (FactTypes.HasFlag(FactTypes.Conversions)) yield return new Field { Name = NameFormatter("Conversions"), ValueType = typeof(int), FieldType = FieldType.Fact };
-            if (FactTypes.HasFlag(FactTypes.TimeOnSite)) yield return new Field { Name = NameFormatter("TimeOnSite"), ValueType = typeof(int), FieldType = FieldType.Fact };
-            if (FactTypes.HasFlag(FactTypes.PageViews)) yield return new Field { Name = NameFormatter("PageViews"), ValueType = typeof(int), FieldType = FieldType.Fact };
-            if (FactTypes.HasFlag(FactTypes.Count)) yield return new Field { Name = NameFormatter("Count"), ValueType = typeof(int), FieldType = FieldType.Fact };        
+            if (FactTypes.HasFlag(FactTypes.Visits)) yield return new Field { Name = NameFormatter("Visits"), ValueKind = "Visits", ValueType = typeof(int), FieldType = FieldType.Fact, FriendlyName = "Visits"};
+            if (FactTypes.HasFlag(FactTypes.Value)) yield return new Field { Name = NameFormatter("Value"), ValueType = typeof(int), FieldType = FieldType.Fact, FriendlyName = "Value"};
+            if (FactTypes.HasFlag(FactTypes.Bounces)) yield return new Field { Name = NameFormatter("Bounces"), ValueType = typeof(int), FieldType = FieldType.Fact, FriendlyName = "Bounces"};
+            if (FactTypes.HasFlag(FactTypes.Conversions)) yield return new Field { Name = NameFormatter("Conversions"), ValueType = typeof(int), FieldType = FieldType.Fact, FriendlyName = "Conversions"};
+            if (FactTypes.HasFlag(FactTypes.TimeOnSite)) yield return new Field { Name = NameFormatter("TimeOnSite"), ValueType = typeof(int), FieldType = FieldType.Fact, FriendlyName = "Time on site"};
+            if (FactTypes.HasFlag(FactTypes.PageViews)) yield return new Field { Name = NameFormatter("PageViews"), ValueType = typeof(int), FieldType = FieldType.Fact, FriendlyName = "Page views" };
+            if (FactTypes.HasFlag(FactTypes.Count)) yield return new Field { Name = NameFormatter("Count"), ValueType = typeof(int), FieldType = FieldType.Fact, FriendlyName = "Count" };
         }
 
         public override bool SetValues(ProcessingScope scope, IList<object> row)
         {
             var ce = CalculateForEntireVisit ? null : scope.Current<PageEventData>();
             var cp = CalculateForEntireVisit ? null : scope.Current<PageData>();
-            var cv = scope.Current<IVisitAggregationContext>().TryGet(v=>v.Visit);                        
+            var cv = scope.Current<IVisitAggregationContext>().TryGet(v => v.Visit);
 
             if (cv == null) return false;
 
@@ -63,7 +68,7 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
 
             var index = 0;
             if (FactTypes.HasFlag(FactTypes.Visits)) row[index++] = scope.OncePerScope<IVisitAggregationContext>(1);
-            if (FactTypes.HasFlag(FactTypes.Value)) row[index++] =  es.Sum(e => e.Value);
+            if (FactTypes.HasFlag(FactTypes.Value)) row[index++] = es.Sum(e => e.Value);
             if (FactTypes.HasFlag(FactTypes.Bounces)) row[index++] = cv.Pages.TryGet(_ => _.Count == 1 ? 1 : 0);
             if (FactTypes.HasFlag(FactTypes.Conversions)) row[index++] = es.Count();
             if (FactTypes.HasFlag(FactTypes.TimeOnSite))
@@ -85,6 +90,45 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
 
 
             return true;
+        }
+
+        public static IEnumerable<CalculatedField> GetCalculatedFields(Func<string, string> nameFormatter, FactTypes factTypes)
+        {
+            if (factTypes.HasFlag(FactTypes.Visits) && factTypes.HasFlag(FactTypes.Value))
+            {
+                yield return
+                    new CalculatedField
+                    {
+                        Name = "Value per visit",
+                        DaxPattern =
+                            string.Format("SUM([{0}]) / SUM([{1}])", nameFormatter("Value"), nameFormatter("Visits")),
+                        FormatString = CalculatedFieldFormat.Decimal
+                    };
+            }
+
+            if (factTypes.HasFlag(FactTypes.Visits) && factTypes.HasFlag(FactTypes.Bounces))
+            {
+                yield return
+                    new CalculatedField
+                    {
+                        Name = "Bounce rate",
+                        DaxPattern =
+                            string.Format("SUM([{0}]) / SUM([{1}])", nameFormatter("Bounces"), nameFormatter("Visits")),
+                        FormatString = CalculatedFieldFormat.Percentage
+                    };
+            }
+
+            if (factTypes.HasFlag(FactTypes.Visits))
+            {
+                yield return
+                    new CalculatedField
+                    {
+                        Name = "Conversion rate",
+                        DaxPattern =
+                            string.Format("SUM([{0}]) / SUM(@Parent[Visits])", nameFormatter("Visits")),
+                        FormatString = CalculatedFieldFormat.Percentage
+                    };
+            }
         }
     }
 }

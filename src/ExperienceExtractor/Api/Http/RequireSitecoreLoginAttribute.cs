@@ -23,15 +23,20 @@ using Sitecore;
 namespace ExperienceExtractor.Api.Http
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    class RequireSitecoreLoginAttribute : AuthorizeAttribute
+    public class RequireSitecoreLoginAttribute : AuthorizeAttribute
     {
         protected override bool IsAuthorized(HttpActionContext actionContext)
+        {
+            return CheckSecurity();
+        }
+
+        public static bool CheckSecurity()
         {
             if (ExperienceExtractorWebApiConfig.AllowAnonymousAccess) return true;
 
             var user = Context.User;
             return user != null && user.IsAuthenticated &&
-                   (user.IsAdministrator || ExperienceExtractorWebApiConfig.AllowedRoles.Any(user.IsInRole) || ExperienceExtractorWebApiConfig.AllowedUsers.Any(userName=>userName.Equals(user.Name, StringComparison.InvariantCultureIgnoreCase)));
+                   (user.IsAdministrator || ExperienceExtractorWebApiConfig.AllowedRoles.Any(user.IsInRole) || ExperienceExtractorWebApiConfig.AllowedUsers.Any(userName => userName.Equals(user.Name, StringComparison.InvariantCultureIgnoreCase)));
         }
     }
 }

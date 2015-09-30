@@ -10,22 +10,35 @@
 // and limitations under the License.
 // -------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.IO;
 using System.Linq;
+using ExperienceExtractor.Api.Jobs;
+using ExperienceExtractor.Data;
 using ExperienceExtractor.Data.Schema;
 using ExperienceExtractor.Export;
 using ExperienceExtractor.Processing;
+using ExperienceExtractor.Processing.DataSources;
 using ExperienceExtractor.Processing.Helpers;
+using Sitecore.Tasks;
 
 namespace ExperienceExtractor.Components.PostProcessors
 {
     public class AccessExporter : ITableDataPostProcessor
     {           
         public string Name { get { return "Access"; }}
-        public void Process(string tempDirectory, IEnumerable<CsvTableData> tables)
+        public void Process(string tempDirectory, IEnumerable<TableData> tables, IJobSpecification job)
         {
+
+            if (tables.Any(t => (t as CsvTableData) == null))
+            {
+                throw new NotSupportedException("AccessExporter require CsvTableData");
+            }
+
+            var csvTables = tables.Cast<CsvTableData>();
+
             var path = Path.Combine(tempDirectory, "Result.accdb");
             using (var file = File.Create(path))
             using (var templateDb = typeof(AccessExporter).Assembly.GetManifestResourceStream("ExperienceExtractor.Components.Resources.Empty.accdb"))
@@ -37,7 +50,7 @@ namespace ExperienceExtractor.Components.PostProcessors
             {
                 conn.Open();
 
-                foreach (var table in tables)
+                foreach (var table in csvTables)
                 {
                     var csvFile = new FileInfo(table.Path);
                     
@@ -80,10 +93,15 @@ namespace ExperienceExtractor.Components.PostProcessors
             }
         }
 
-        public void Validate()
+        public void Validate(IEnumerable<TableData> tables, IJobSpecification job)
         {
             
         }
+
+        public bool UpdateDataSource(IEnumerable<TableData> tables, IDataSource source)
+        {
+            return false;
+        }        
 
         private string FieldList(IEnumerable<Indexed<Field>> fields)
         {

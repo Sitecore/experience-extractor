@@ -25,5 +25,8 @@ namespace ExperienceExtractor.Processing.DataSources
         }
 
         protected abstract bool Include(TItem item);
+
+
+        public virtual bool IsStagingFilter { get { return false; } }
     }
 }

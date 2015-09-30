@@ -18,9 +18,11 @@ namespace ExperienceExtractor.Api.Jobs
 {
     public interface IJobRepository
     {
-        JobInfo CreateJob(IJobSpecification specification);
+        JobInfo CreateJob(IJobSpecification specification, Action<JobInfo> jobEnded = null);
 
         IEnumerable<JobInfo> Get();
+
+        IEnumerable<JobInfo> GetFromLockKey(string lockKey);
 
         JobInfo Get(Guid id);
 

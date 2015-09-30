@@ -18,16 +18,18 @@ using System.Linq;
 using System.Spatial;
 using System.Xml;
 using System.Xml.Linq;
+using ExperienceExtractor.Api.Jobs;
 using ExperienceExtractor.Data;
 using ExperienceExtractor.Data.Schema;
 using ExperienceExtractor.Export;
 using ExperienceExtractor.Processing;
+using ExperienceExtractor.Processing.DataSources;
 using Microsoft.Data.Edm;
 using Microsoft.Data.Edm.Csdl;
 using Microsoft.Data.Edm.Library;
 using Microsoft.Data.Edm.Validation;
 
-namespace ExperienceExtractor.Components.PostProcessors
+namespace ExperienceExtractor.Api.OData
 {
     public class EdmSchemaBuilder : ITableDataPostProcessor
     {
@@ -43,12 +45,12 @@ namespace ExperienceExtractor.Components.PostProcessors
 
         static bool IsNullable(Type clrType)
         {
-            return Nullable.GetUnderlyingType(clrType) != null;
+            return clrType == typeof(string) || Nullable.GetUnderlyingType(clrType) != null;
         }
 
         public IEdmModel BuildModel(IEnumerable<TableData> tables)
         {
-            var model = new EdmModel();
+            var model = new EdmModel();            
             var container = new EdmEntityContainer("sitecore.com", "Visits");
             model.AddElement(container);            
             
@@ -103,8 +105,8 @@ namespace ExperienceExtractor.Components.PostProcessors
                     table.AddKeys(prop);
                 }
                 propertyMap.Add(field, prop);
-            }
-            model.AddElement(table);
+            }            
+            model.AddElement(table);            
 
             return new EdmEntityTypeWrapper {Type = table, Properties = propertyMap};
         }
@@ -181,7 +183,7 @@ namespace ExperienceExtractor.Components.PostProcessors
 
         public string Name { get { return "EdmSchema"; }}
 
-        public void Process(string tempDirectory, IEnumerable<CsvTableData> tables)
+        public void Process(string tempDirectory, IEnumerable<TableData> tables, IJobSpecification job)
         {
             var model = BuildModel(tables);
             using (var xml = XmlWriter.Create(Path.Combine(tempDirectory, "edm.xml")))
@@ -191,9 +193,14 @@ namespace ExperienceExtractor.Components.PostProcessors
             }
         }
 
-        public void Validate()
+        public void Validate(IEnumerable<TableData> tables, IJobSpecification job)
         {
             
         }
+
+        public bool UpdateDataSource(IEnumerable<TableData> tables, IDataSource source)
+        {
+            return false;
+        }        
     }
 }

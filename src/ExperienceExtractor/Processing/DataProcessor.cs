@@ -17,8 +17,6 @@ using System.Linq;
 using ExperienceExtractor.Data;
 using ExperienceExtractor.Export;
 using ExperienceExtractor.Mapping;
-using ExperienceExtractor.Processing.DataSources;
-using Sitecore.Globalization;
 
 namespace ExperienceExtractor.Processing
 {
@@ -39,8 +37,12 @@ namespace ExperienceExtractor.Processing
 
         public ITableMapper TableMapper { get; set; }
         public int BatchSize { get; set; }
-
         
+        public int RowsCreated
+        {
+            get { return TableMap.Tables.Cast<TableDataBuilder>().Sum(t => t.RowsCreated); }
+        }
+
         public IItemFieldLookup FieldLookup { get; set; }
         
         public DataProcessor(ITableMapper tableMapper,
@@ -82,7 +84,7 @@ namespace ExperienceExtractor.Processing
             foreach (var item in data.Cast<object>())
             {
                 _tablesFinalized = false;
-                if (BatchWriter != null && TableMap.Tables.Any(t => t.RowCount >= BatchSize))
+                if (BatchWriter != null && TableMap.Tables.Sum(t => t.RowCount) >= BatchSize)
                 {
                     Flush();
                 }

@@ -21,17 +21,19 @@ namespace ExperienceExtractor.Mapping
     {
         protected IFieldMapper Key { get; set; }
         protected IEnumerable<KeyValuePair<string, ILabelProvider>> Labels { get; set; }
+        public string FriendlyName { get; set; }
 
-        public LabeledFieldMapper(IFieldMapper key, string labelName, ILabelProvider label)
-            : this(key, label == null ? new KeyValuePair<string, ILabelProvider>[0] : new[] { new KeyValuePair<string, ILabelProvider>(labelName, label) })
+        public LabeledFieldMapper(IFieldMapper key, string labelName, ILabelProvider label, string friendlyName = null)
+            : this(key, label == null ? new KeyValuePair<string, ILabelProvider>[0] : new[] { new KeyValuePair<string, ILabelProvider>(labelName, label)}, friendlyName)
         {
 
         }
 
-        public LabeledFieldMapper(IFieldMapper key, IEnumerable<KeyValuePair<string, ILabelProvider>> labels = null)
+        public LabeledFieldMapper(IFieldMapper key, IEnumerable<KeyValuePair<string, ILabelProvider>> labels = null, string friendlyName = null)
         {
             Key = key;
             Labels = labels;
+            FriendlyName = friendlyName;
         }
 
 
@@ -42,18 +44,18 @@ namespace ExperienceExtractor.Mapping
             {
                 yield return field;
             }
-            
+
             if (Labels != null)
-            {                
+            {
                 foreach (var label in Labels)
-                {                    
-                    yield return new Field { FieldType = FieldType.Label, Name = label.Key, ValueType = typeof(string) };
+                {
+                    yield return new Field { FieldType = FieldType.Label, Name = label.Key, ValueType = typeof(string), FriendlyName = FriendlyName};
                 }
             }
         }
 
         public override bool SetValues(ProcessingScope scope, IList<object> target)
-        {            
+        {
             return Key.SetValues(scope, target);
         }
 
@@ -68,11 +70,11 @@ namespace ExperienceExtractor.Mapping
                 {
                     var loader = new LabelLoader(label.Value);
                     loader.LabelProvider.Initialize(processor);
-                    _labelLoaders.Add(loader);             
+                    _labelLoaders.Add(loader);
                 }
             }
-            
-            base.Initialize(processor);            
+
+            base.Initialize(processor);
         }
 
         public override void PostProcessRows(IEnumerable<IList<object>> rows)
@@ -86,6 +88,6 @@ namespace ExperienceExtractor.Mapping
             }
 
             base.PostProcessRows(rows);
-        }        
+        }
     }
 }

@@ -172,7 +172,7 @@ namespace ExperienceExtractor.Mapping
                 case FieldTarget.KeyReference:
 
                     return LookupTableBuilder.Schema.Keys.Select(fp =>
-                        fp.Value.Affix(PrefixName).Affix(ReferenceNameFormatter).AsNullableReference(Key ? FieldType.Key : FieldType.Dimension));
+                        fp.Value.Affix(PrefixName).Affix(ReferenceNameFormatter).AsNullableReference(Key ? FieldType.Key : FieldType.Dimension).ChangeSort(SortOrder.Unspecified));
 
 
                 case FieldTarget.Inline:

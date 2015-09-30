@@ -21,12 +21,20 @@ namespace ExperienceExtractor.MongoDb.Filters
         public double Start { get; set; }
         public double End { get; set; }
 
+        /// <summary>
+        /// If the filter is only used for staging. 
+        /// If true, scheduled updates will include all data (that is, rebuild on first run), if false, scheduled updates will use this sampling
+        /// </summary>
+        public bool ForStaging { get; set; }
+
         private MongoIdSampler _sampler = new MongoIdSampler();
         public MongoRandomSampleFilter(double start = 0, double end = 1)
         {
             Start = start;
             End = end;
         }
+
+        public bool IsStagingFilter { get { return ForStaging; } }
 
         protected override bool Include(IVisitAggregationContext item)
         {

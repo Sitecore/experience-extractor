@@ -11,6 +11,7 @@
 // -------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 
 namespace ExperienceExtractor.Data.Schema
 {
@@ -20,9 +21,15 @@ namespace ExperienceExtractor.Data.Schema
     public class Field : ICloneable
     {        
         /// <summary>
-        /// The name of the field
+        /// The name of the field in the exported dataset
         /// </summary>
         public string Name { get; set; }
+
+
+        /// <summary>
+        /// A friendly name for the field for client applications
+        /// </summary>
+        public string FriendlyName { get; set; }
 
         /// <summary>
         /// The field's .NET data type. Nullable is used to indicate that a field with a value type can be null
@@ -50,6 +57,16 @@ namespace ExperienceExtractor.Data.Schema
         /// </summary>
         public object DefaultValue { get; set; }
 
+        /// <summary>
+        /// Used to indicate that this fields contains, e.g., "Visits". Used for resolving field references in calculated fields
+        /// </summary>
+        public string ValueKind { get; set; }
+
+        /// <summary>
+        /// Hide the field (surrogate key)
+        /// </summary>
+        public bool Hide { get; set; }
+
         
         /// <summary>
         /// Creates a copy of the field with the field type specified. Value types are made nullable to allow null references in tables.
@@ -68,6 +85,13 @@ namespace ExperienceExtractor.Data.Schema
             return clone;
         }
 
+        public Field ChangeSort(SortOrder sortOrder)
+        {
+            var clone = Clone();
+            clone.SortOrder = sortOrder;
+            return clone;
+        }
+
         /// <summary>
         /// Creates a copy of the field with its name updated by the function specified
         /// </summary>
@@ -81,7 +105,7 @@ namespace ExperienceExtractor.Data.Schema
             clone.Name = nameFormatter(clone.Name);
 
             return clone;
-        }
+        }        
 
         /// <summary>
         /// Creates a clone of the field
@@ -95,8 +119,10 @@ namespace ExperienceExtractor.Data.Schema
                 ValueType = ValueType,
                 FieldType = FieldType,
                 SortOrder = SortOrder,
-                DefaultValue = DefaultValue,
-                SortBy = SortBy
+                DefaultValue = DefaultValue,                
+                SortBy = SortBy,
+                Hide = Hide,
+                FriendlyName = FriendlyName
             };
         }
 

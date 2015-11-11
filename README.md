@@ -41,7 +41,7 @@ Experience Extractor has been tested with Sitecore XP 8.0 including update 1 and
 Experience Extractor requires direct access to Mongo DB and Sitecore's item database, and is currently not compatible with Sitecore xDB Cloud Service.
 
 ##Installation
-Download and install [the package](https://github.com/Sitecore/experience-extractor/tree/master/build) on the server(s) where Experience Extractor will be available. 
+Download and install [the package](https://github.com/Sitecore/experience-extractor/releases) on the server(s) where Experience Extractor will be available. 
 To verify the installation succeeded open the URL /sitecore/admin/experienceextractor/shell.aspx
 
 ###xDB connection string

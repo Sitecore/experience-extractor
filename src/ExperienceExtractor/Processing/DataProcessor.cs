@@ -59,6 +59,7 @@ namespace ExperienceExtractor.Processing
         public void Initialize()
         {
             if( _initialized) throw new InvalidOperationException("Processor already initialized");
+            _initialized = true;
             TableMapper.Initialize(this, null);
         }
 

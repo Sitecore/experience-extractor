@@ -32,7 +32,7 @@ namespace ExperienceExtractor.Export
         public override IEnumerable<object[]> Rows
         {
             get
-            {
+            {                
                 if (Sources.Count == 0) return Enumerable.Empty<object[]>();
 
                 if (Sources.Count == 1)
@@ -42,10 +42,7 @@ namespace ExperienceExtractor.Export
                 
                 var comparer = new RowComparer(Schema);
 
-                if (Schema.Name == "MonthlyVisits")
-                {
-                    var b = 4;
-                }
+                
                 //O(Log(M)*N) compared to the old O(M*N)
                 return Sources.Select(t => t.Rows).ToList().MergeSorted(MergeFacts, comparer);
 

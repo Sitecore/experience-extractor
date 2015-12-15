@@ -84,7 +84,7 @@ namespace ExperienceExtractor.Processing.Helpers
         public static IEnumerable<T> MergeSorted<T>(this IEnumerable<T> first, IEnumerable<T> second, IComparer<T> comparer = null)
         {
             comparer = comparer ?? Comparer<T>.Default;
-
+            
             using (var firstEnumerator = first.GetEnumerator())
             using (var secondEnumerator = second.GetEnumerator())
             {

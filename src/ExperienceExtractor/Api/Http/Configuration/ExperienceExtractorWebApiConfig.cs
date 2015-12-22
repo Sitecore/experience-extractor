@@ -42,6 +42,8 @@ namespace ExperienceExtractor.Api.Http.Configuration
 
         public static int MaxJobHistoryLength { get; set; }
 
+        public static string ForceProtocol { get; set; }
+
         /// <summary>
         /// Maximum expected lag before interactions are saved in xDB.
         /// </summary>

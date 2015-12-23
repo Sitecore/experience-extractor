@@ -83,6 +83,9 @@ namespace ExperienceExtractor.Api.Pipelines
                 exportNode.GetAttribute("maxJobHistoryLength").SetIfDefined(value=>
                     ExperienceExtractorWebApiConfig.MaxJobHistoryLength = XmlConvert.ToInt32(value));
 
+                exportNode.GetAttribute("forceProtocol").SetIfDefined(value =>
+                    ExperienceExtractorWebApiConfig.ForceProtocol = value);
+
 
                 var repositoryNode = exportNode.SelectSingleNode("jobRepository");
                 if (repositoryNode != null)

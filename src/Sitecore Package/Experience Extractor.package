@@ -1,9 +1,9 @@
-<project site="sc80rev150427" format="Zip Package">
+<project site="" format="Zip Package" targetfilefolder="wwwroot">
   <Metadata>
     <metadata>
       <PackageName>Sitecore Experience Extractor</PackageName>
       <Author>Sitecore Corporation</Author>
-      <Version>0.3.0</Version>
+      <Version>0.3.1</Version>
       <Revision />
       <License>Copyright 2015 Sitecore Corporation A/S&lt;br /&gt;
 &lt;br /&gt;

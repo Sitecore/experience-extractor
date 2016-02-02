@@ -152,6 +152,7 @@
     <Compile Include="Mapping\IItemFieldLookup.cs" />
     <Compile Include="Processing\DataSources\DataSourceBase.cs" />
     <Compile Include="Processing\DateTime\DateRangeFilter.cs" />
+    <Compile Include="Processing\Helpers\ProtocolHelper.cs" />
     <Compile Include="Processing\IUpdatingTableDataPostProcessor.cs" />
     <Compile Include="Processing\Keys\ByteHelper.cs" />
     <Compile Include="Processing\Labels\LabelLoader.cs" />

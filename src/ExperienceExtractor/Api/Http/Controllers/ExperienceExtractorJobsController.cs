@@ -25,6 +25,9 @@ using Sitecore.Pipelines.Save;
 
 namespace ExperienceExtractor.Api.Http.Controllers
 {
+    using System.Web.Http.Routing;
+    using Processing.Helpers;
+
     [RequireSitecoreLogin]
     public class ExperienceExtractorJobsController : ApiController
     {
@@ -68,7 +71,9 @@ namespace ExperienceExtractor.Api.Http.Controllers
                 var specification = new JsonJobParser(JObject.Parse(content));
                 var jobInfo = _repository.CreateJob(specification);
 
-                return RedirectToRoute(ExperienceExtractorWebApiConfig.JobRouteName, new { id = jobInfo.Id });
+                var urlHelper = new UrlHelper(request);
+                string url = urlHelper.Link(ExperienceExtractorWebApiConfig.JobRouteName, new { id = jobInfo.Id });
+                return Redirect(ProtocolHelper.EnforceProtocol(url));
             }
             catch (Exception ex)
             {
@@ -84,11 +89,11 @@ namespace ExperienceExtractor.Api.Http.Controllers
 
         private JobInfo UpdateResultUrl(JobInfo jobInfo, bool includeDetails)
         {
-            jobInfo.Url = Url.Route(ExperienceExtractorWebApiConfig.JobRouteName, new {id = jobInfo.Id});
+            jobInfo.Url = ProtocolHelper.EnforceProtocol(Url.Route(ExperienceExtractorWebApiConfig.JobRouteName, new {id = jobInfo.Id}));
 
             if (jobInfo.HasResult)
             {
-                jobInfo.ResultUrl = Url.Route(ExperienceExtractorWebApiConfig.JobResultRouteName, new {id = jobInfo.Id});
+                jobInfo.ResultUrl = ProtocolHelper.EnforceProtocol(Url.Route(ExperienceExtractorWebApiConfig.JobResultRouteName, new {id = jobInfo.Id}));
             }
 
             if (!includeDetails)

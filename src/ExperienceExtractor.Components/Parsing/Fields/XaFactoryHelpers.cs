@@ -21,7 +21,7 @@ using Sitecore.SecurityModel;
 
 namespace ExperienceExtractor.Components.Parsing.Fields
 {
-    static class XaFactoryHelpers
+    public static class XaFactoryHelpers
     {
 
         public static IDimension ParseDimension(this ParseState state)

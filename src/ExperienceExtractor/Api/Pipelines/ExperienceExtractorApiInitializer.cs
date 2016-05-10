@@ -49,10 +49,10 @@ namespace ExperienceExtractor.Api.Pipelines
                     ExperienceExtractorWebApiConfig.AllowAnonymousAccess =
                         XmlConvert.ToBoolean(security.GetAttribute("allowAnonymousAccess"));
 
-                    ExperienceExtractorWebApiConfig.AllowedRoles = exportNode.SelectNodes("allowedRole").OrEmpty()
+                    ExperienceExtractorWebApiConfig.AllowedRoles = security.SelectNodes("allowedRole").OrEmpty()
                         .OfType<XmlElement>().Select(el => el.InnerText.Trim()).ToList();
 
-                    ExperienceExtractorWebApiConfig.AllowedUsers = exportNode.SelectNodes("allowedUser").OrEmpty()
+                    ExperienceExtractorWebApiConfig.AllowedUsers = security.SelectNodes("allowedUser").OrEmpty()
                         .OfType<XmlElement>().Select(el => el.InnerText.Trim()).ToList();
                 }
 

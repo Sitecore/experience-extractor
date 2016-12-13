@@ -10,12 +10,14 @@
 // and limitations under the License.
 // -------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ExperienceExtractor.Data.Schema;
 using ExperienceExtractor.Mapping;
 using ExperienceExtractor.Processing;
 using Sitecore.Analytics.Aggregation.Data.Model;
+using Sitecore.Diagnostics;
 using Sitecore.ExperienceAnalytics.Aggregation.Data.Model;
 
 namespace ExperienceExtractor.Components.Mapping.Sitecore
@@ -24,7 +26,7 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
     {
         public IDimension Dimension { get; set; }
 
-        private string _keyName;        
+        private string _keyName;
         private readonly bool _primaryKey;
         private readonly string _friendlyName;
 
@@ -48,9 +50,9 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
                     FieldType = _primaryKey ? FieldType.Key : FieldType.Dimension,
                     Name = _keyName,
                     FriendlyName = _friendlyName,
-                    ValueType = typeof (string)
+                    ValueType = typeof(string)
                 };
-            
+
         }
 
         public override bool SetValues(ProcessingScope scope, IList<object> row)
@@ -58,7 +60,7 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
             var dimensionData = GetDimensionDataFromContext(scope);
             if (dimensionData != null)
             {
-                row[0] = dimensionData.DimensionKey;                
+                row[0] = dimensionData.DimensionKey;
                 return true;
             }
 
@@ -71,7 +73,14 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
             var ctx = context.Current<IVisitAggregationContext>();
             if (ctx != null)
             {
-                return Dimension.GetData(ctx).FirstOrDefault();
+                try
+                {
+                    return Dimension.GetData(ctx).FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    Log.SingleError("Error getting dimension from context:" + ex, this);
+                }
             }
             return null;
         }

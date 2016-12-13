@@ -22,7 +22,7 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
     public static class XaHelpers
     {
         public static IDimension GetDimension(string name)
-        {
+        {            
             var type =
                 typeof (DimensionBase).Assembly.GetType("Sitecore.ExperienceAnalytics.Aggregation.Dimensions." + name);
 

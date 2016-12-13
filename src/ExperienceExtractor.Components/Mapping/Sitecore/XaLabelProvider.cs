@@ -11,11 +11,13 @@
 // -------------------------------------------------------------------------------------------
 
 using System;
+using System.Reflection;
 using ExperienceExtractor.Mapping;
 using ExperienceExtractor.Processing;
 using Sitecore.Diagnostics;
 using Sitecore.ExperienceAnalytics.Aggregation.Data.Model;
 using Sitecore.ExperienceAnalytics.Api;
+using Sitecore.ExperienceAnalytics.Api.Repositories;
 using Sitecore.ExperienceAnalytics.Api.Response.DimensionKeyTransformers;
 using Sitecore.Globalization;
 
@@ -64,8 +66,17 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
         {
             try
             {
+                var service = ApiContainer.Repositories.GetReportingService();
+                var reader = (IDimensionKeyTransformerReader)service.GetType().GetField("dimensionDefinitionService", BindingFlags.Instance | BindingFlags.NonPublic)?
+                    .GetValue(service);
+
+                if( reader == null)
+                {
+                    throw new InvalidOperationException("Could not obtain IDimensionKeyTransformerReader from the reporting service");
+                }
+
                 var keyTransformer = dimension as IDimensionKeyTransformer ??
-                                     ApiContainer.Repositories.GetDimensionDefinitionService().GetDimensionKeyTransformer(dimension.DimensionId);
+                                     reader?.GetDimensionKeyTransformer(dimension.DimensionId);
                 return keyTransformer != null ? new XaLabelProvider(keyTransformer, language) : null;
             }
             catch (Exception ex)

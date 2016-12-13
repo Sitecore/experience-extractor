@@ -14,7 +14,10 @@ using System;
 using ExperienceExtractor.Api.Jobs;
 using ExperienceExtractor.Api.Parsing;
 using ExperienceExtractor.Processing.Helpers;
+using Microsoft.AnalysisServices;
 using Sitecore.Data.Items;
+using Sitecore.Data.Serialization;
+using Sitecore.ExperienceAnalytics.Aggregation;
 using Sitecore.ExperienceAnalytics.Aggregation.Data.Model;
 using Sitecore.ExperienceAnalytics.Api;
 using Sitecore.SecurityModel;
@@ -30,12 +33,13 @@ namespace ExperienceExtractor.Components.Parsing.Fields
             using (new SecurityDisabler())
             {
                 var dimensionString = state.Require<string>("Dimension", true);
-
+                
+                
 
                 Guid dimensionId;
                 if (Guid.TryParse(dimensionString, out dimensionId))
-                {
-                    var dim = ApiContainer.Repositories.GetDimensionDefinitionService().GetDimension(dimensionId);
+                {                    
+                    var dim = AggregationContainer.Repositories.GetDimensionDefinitionService().GetDimension(dimensionId);
 
                     if (dim == null)
                     {
@@ -62,7 +66,7 @@ namespace ExperienceExtractor.Components.Parsing.Fields
                     var item = state.Parser.Database.GetItem(path, state.Parser.DefaultLanguage);
                     if (item != null)
                     {
-                        var dim = ApiContainer.Repositories.GetDimensionDefinitionService().GetDimension(item.ID.Guid);
+                        var dim = AggregationContainer.Repositories.GetDimensionDefinitionService().GetDimension(item.ID.Guid);
                         if (dim == null)
                         {
                             throw ParseException.AttributeError(state,

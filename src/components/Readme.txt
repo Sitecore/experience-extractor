@@ -1,1 +1,1 @@
-Copy the assemblies from Sitecore XP 8.0 here.
+Copy the assemblies from Sitecore XP 8.0 (pre update 5) here.

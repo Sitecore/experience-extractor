@@ -14,6 +14,7 @@ using System;
 using System.Linq.Expressions;
 using ExperienceExtractor.Mapping;
 using ExperienceExtractor.Processing.DataSources;
+using Newtonsoft.Json;
 using Sitecore.Analytics;
 using Sitecore.Analytics.Aggregation.Data.Model;
 using Sitecore.Analytics.Model;
@@ -42,7 +43,12 @@ namespace ExperienceExtractor.Components.Mapping.Sitecore
 
         public static RulesFilter FromString(string input)
         {
-            return new RulesFilter(SegmentData.Deserialize(input));
+            //SegmentRulesHelper.Deserialize
+            var rulesList = JsonConvert.DeserializeObject<RuleList<RuleContext>>(input, new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
+            return new RulesFilter(rulesList);
         }        
 
         public bool Include(object item)

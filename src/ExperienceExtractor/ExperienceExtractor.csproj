@@ -221,7 +221,6 @@
     <Compile Include="Processing\DataSources\IDataFilter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="ExperienceExtractor.licenseheader" />
     <None Include="packages.config" />
   </ItemGroup>

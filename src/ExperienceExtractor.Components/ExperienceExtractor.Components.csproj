@@ -157,7 +157,6 @@
     <None Include="..\ExperienceExtractor\ExperienceExtractor.licenseheader">
       <Link>ExperienceExtractor.licenseheader</Link>
     </None>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -36,7 +36,7 @@ Experience Extractor performs the necessary queries against Sitecore’s databas
 Experience Extractor is exposed through a RESTful API where jobs are specified in an extensible JSON format.
 
 ##Compatibility
-Experience Extractor has been tested with Sitecore XP 8.0 including update 1 and 2.
+Experience Extractor has been tested with Sitecore XP 8.0, 8.1 and 8.2.
 
 Experience Extractor requires direct access to Mongo DB and Sitecore's item database, and is currently not compatible with Sitecore xDB Cloud Service.
 

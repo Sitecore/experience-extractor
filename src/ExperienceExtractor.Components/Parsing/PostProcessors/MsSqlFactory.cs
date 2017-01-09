@@ -49,7 +49,7 @@ namespace ExperienceExtractor.Components.Parsing.PostProcessors
             var ssasDatabase = state.TryGet<string>("SsasDatabase");          
 
             var exporter = new SqlExporter(connectionString,
-                state.TryGet("Database", () => state.TryGet<string>("CreateDatabase")));
+                state.TryGet("Database", () => state.TryGet<string>("CreateDatabase")), state.TryGet<bool>("clearInsteadOfDropCreate"));
 
             exporter.SqlClearOptions = state.TryGet("Clear", SqlClearOptions.None);
             exporter.Rebuild = state.TryGet("Rebuild", false);

@@ -36,6 +36,7 @@ namespace ExperienceExtractor.Components.PostProcessors
     {
         public string ConnectionString { get; set; }
         public string CreateDatabaseName { get; set; }
+        public bool ClearInsteadOfDropCreate { get; set; }
 
         public int Timeout { get; set; }
 
@@ -58,51 +59,72 @@ namespace ExperienceExtractor.Components.PostProcessors
         public event EventHandler<SqlTransaction> BeforeCommit;
         public event EventHandler<SqlConnection> SchemaCreating;
 
-        public SqlExporter(string connectionString, string createDatabaseName = null)
+        public SqlExporter(string connectionString, string createDatabaseName = null, bool clearInsteadOfDropCreate = false)
         {
             ConnectionString = connectionString;
             CreateDatabaseName = createDatabaseName;
+            ClearInsteadOfDropCreate = clearInsteadOfDropCreate;
             Timeout = 3600 * 6;
             SqlClearOptions = SqlClearOptions.All;
         }
-
 
         public void Process(string tempDirectory, IEnumerable<TableData> tables, IJobSpecification job)
         {
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new SqlConnection(this.ConnectionString))
             {
                 conn.Open();
 
-                if (!SsasOnly)
+                if (!this.SsasOnly)
                 {
-                    if (!string.IsNullOrEmpty(CreateDatabaseName))
+                    if (!string.IsNullOrEmpty(this.CreateDatabaseName))
                     {
-                        if (!Update)
+                        if (!this.Update)
                         {
-                            //Drop the database if it already exists
-                            try
+                            if (!this.ClearInsteadOfDropCreate)
                             {
-                                new SqlCommand(string.Format(@"ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-                            DROP DATABASE [{0}]", CreateDatabaseName), conn).ExecuteNonQuery();
-                            }
-                            catch
-                            {
+                                //Drop the database if it already exists
+                                try
+                                {
+                                    new SqlCommand(string.Format(@"ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+                            DROP DATABASE [{0}]", this.CreateDatabaseName), conn).ExecuteNonQuery();
+                                }
+                                catch
+                                {
+                                }
+
+                                //Create the database, and set it to simple recovery mode. This makes inserts faster.
+                                new SqlCommand(string.Format("CREATE DATABASE [{0}];", this.CreateDatabaseName), conn)
+                                    .ExecuteNonQuery();
+                                new SqlCommand(
+                                    string.Format("ALTER DATABASE [{0}] SET RECOVERY SIMPLE", this.CreateDatabaseName),
+                                    conn).ExecuteNonQuery();
                             }
 
-                            //Create the database, and set it to simple recovery mode. This makes inserts faster.
-                            new SqlCommand(string.Format("CREATE DATABASE [{0}];", CreateDatabaseName), conn)
-                                .ExecuteNonQuery();
-                            new SqlCommand(
-                                string.Format("ALTER DATABASE [{0}] SET RECOVERY SIMPLE", CreateDatabaseName),
-                                conn).ExecuteNonQuery();
-                            conn.ChangeDatabase(CreateDatabaseName);
+                            conn.ChangeDatabase(this.CreateDatabaseName);
+
+                            if (this.ClearInsteadOfDropCreate)
+                            {
+                                List<string> tablesToDrop = new List<string>();
+                                using (SqlDataReader sqlDataReader = new SqlCommand("SELECT concat(TABLE_SCHEMA, '.', TABLE_NAME) FROM INFORMATION_SCHEMA.TABLES WHERE  TABLE_TYPE = 'BASE TABLE'", conn).ExecuteReader())
+                                {
+                                    while (sqlDataReader.Read())
+                                    {
+                                        tablesToDrop.Add(sqlDataReader.GetString(0));
+                                    }
+                                }
+
+                                foreach (string tableToDrop in tablesToDrop)
+                                {
+                                    new SqlCommand($"DROP TABLE {tableToDrop};", conn).ExecuteNonQuery();
+                                }
+                            }
 
                             new SqlCommand(@"CREATE SCHEMA Staging;", conn).ExecuteNonQuery();
 
                             var s = new StringWriter();
-                            WriteSchema(s, tables);
+                            this.WriteSchema(s, tables);
                             new SqlCommand(s.ToString(), conn).ExecuteNonQuery();
 
                             new SqlCommand(@"CREATE SCHEMA Sitecore;", conn).ExecuteNonQuery();
@@ -114,17 +136,17 @@ namespace ExperienceExtractor.Components.PostProcessors
                             cmd.Parameters.AddWithValue("@Prototype", job.ToString());
                             cmd.ExecuteNonQuery();
 
-                            OnSchemaCreating(conn);
+                            this.OnSchemaCreating(conn);
                         }
                         else
                         {
-                            conn.ChangeDatabase(CreateDatabaseName);
+                            conn.ChangeDatabase(this.CreateDatabaseName);
 
-                            ValidateSchema(conn, tables);
+                            this.ValidateSchema(conn, tables);
                         }
                     }
 
-                    AcquireLock(conn, null); //TODO: Implement IDisposable...
+                    this.AcquireLock(conn, null); //TODO: Implement IDisposable...
                     try
                     {
                         new SqlCommand(@"EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'", conn)
@@ -132,38 +154,38 @@ namespace ExperienceExtractor.Components.PostProcessors
 
                         try
                         {
-                            UseStagingTables = true;
+                            this.UseStagingTables = true;
 
-                            if (UseStagingTables)
+                            if (this.UseStagingTables)
                             {
-                                Task.WaitAll(tables.Select(table => Task.Run(() => UploadData(table))).ToArray());
+                                Task.WaitAll(tables.Select(table => Task.Run(() => this.UploadData(table))).ToArray());
                             }
 
                             using (var tran = conn.BeginTransaction())
                             {
                                 foreach (var table in tables)
                                 {
-                                    InsertOrUpdateData(table, conn, tran,
-                                        UseStagingTables ? GetStagingTableName(table) : null);
+                                    this.InsertOrUpdateData(table, conn, tran,
+                                        this.UseStagingTables ? GetStagingTableName(table) : null);
                                 }
 
                                 var cmd = new SqlCommand(@"UPDATE Sitecore.JobInfo SET LastCutoff=@LastCutoff", conn, tran);
-                                cmd.Parameters.AddWithValue(@"LastCutoff", _nextCuttoff ?? (object)DBNull.Value);
+                                cmd.Parameters.AddWithValue(@"LastCutoff", this._nextCuttoff ?? (object)DBNull.Value);
                                 cmd.ExecuteNonQuery();
 
-                                OnBeforeCommit(tran);
+                                this.OnBeforeCommit(tran);
 
                                 tran.Commit();
                             }
 
-                            if (UseStagingTables)
+                            if (this.UseStagingTables)
                             {
                                 foreach (var table in tables)
                                 {
                                     new SqlCommand(
                                         string.Format(@"TRUNCATE TABLE {0}", GetStagingTableName(table)), conn)
                                     {
-                                        CommandTimeout = Timeout
+                                        CommandTimeout = this.Timeout
                                     }.ExecuteNonQuery();
                                 }
                             }
@@ -174,22 +196,22 @@ namespace ExperienceExtractor.Components.PostProcessors
                                 .ExecuteNonQuery();
                         }
 
-                        if (_ssasExporter != null)
+                        if (this._ssasExporter != null)
                         {
-                            _ssasExporter.CutOff = _cutoff;
-                            _ssasExporter.Process(tempDirectory, tables, job);
+                            this._ssasExporter.CutOff = this._cutoff;
+                            this._ssasExporter.Process(tempDirectory, tables, job);
                         }
                     }
                     finally
                     {
-                        ReleaseLock(conn, null);
+                        this.ReleaseLock(conn, null);
                     }
                 }
                 else
                 {
-                    if (_ssasExporter != null)
+                    if (this._ssasExporter != null)
                     {
-                        _ssasExporter.Process(tempDirectory, tables, job);
+                        this._ssasExporter.Process(tempDirectory, tables, job);
                     }
                 }
             }

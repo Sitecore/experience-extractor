@@ -106,28 +106,25 @@ namespace ExperienceExtractor.Components.PostProcessors
 
                             if (this.ClearInsteadOfDropCreate)
                             {
-                                List<string> tablesToDrop = new List<string>();
-                                using (SqlDataReader sqlDataReader = new SqlCommand("SELECT concat(TABLE_SCHEMA, '.', TABLE_NAME) FROM INFORMATION_SCHEMA.TABLES WHERE  TABLE_TYPE = 'BASE TABLE'", conn).ExecuteReader())
-                                {
-                                    while (sqlDataReader.Read())
-                                    {
-                                        tablesToDrop.Add(sqlDataReader.GetString(0));
-                                    }
-                                }
-
-                                foreach (string tableToDrop in tablesToDrop)
-                                {
-                                    new SqlCommand($"DROP TABLE {tableToDrop};", conn).ExecuteNonQuery();
-                                }
+                                DropAllConstraints(conn);
+                                DropAllTables(conn);
+                                DropAllUserDefinedTypes(conn);
                             }
 
-                            new SqlCommand(@"CREATE SCHEMA Staging;", conn).ExecuteNonQuery();
+                            if((int) new SqlCommand(@"SELECT count(*) WHERE schema_id('Staging') IS NOT NULL", conn).ExecuteScalar() <= 0)
+                            {
+                                new SqlCommand(@"CREATE SCHEMA Staging;", conn).ExecuteNonQuery();
+                            }
 
                             var s = new StringWriter();
                             this.WriteSchema(s, tables);
                             new SqlCommand(s.ToString(), conn).ExecuteNonQuery();
 
-                            new SqlCommand(@"CREATE SCHEMA Sitecore;", conn).ExecuteNonQuery();
+                            if ((int)new SqlCommand(@"SELECT count(*) WHERE schema_id('Sitecore') IS NOT NULL", conn).ExecuteScalar() <= 0)
+                            {
+                                new SqlCommand(@"CREATE SCHEMA Sitecore;", conn).ExecuteNonQuery();
+                            }
+
                             new SqlCommand(
                                 @"CREATE TABLE Sitecore.JobInfo ( [Schema] nvarchar(max), [Prototype] nvarchar(max), [LockDate] datetime2 null, LastCutoff datetime2 null );",
                                 conn).ExecuteNonQuery();
@@ -641,6 +638,65 @@ namespace ExperienceExtractor.Components.PostProcessors
         {
             Rebuild = true;
             Update = true;
+        }
+
+        private static void DropAllTables(SqlConnection conn)
+        {
+            List<string> tablesToDrop = new List<string>();
+            using (
+                SqlDataReader sqlDataReader =
+                    new SqlCommand(
+                        "SELECT concat(TABLE_SCHEMA, '.', TABLE_NAME) FROM INFORMATION_SCHEMA.TABLES WHERE  TABLE_TYPE = 'BASE TABLE'",
+                        conn).ExecuteReader())
+            {
+                while (sqlDataReader.Read())
+                {
+                    tablesToDrop.Add(sqlDataReader.GetString(0));
+                }
+            }
+
+            foreach (string tableToDrop in tablesToDrop)
+            {
+                new SqlCommand($"DROP TABLE {tableToDrop};", conn).ExecuteNonQuery();
+            }
+        }
+
+        private static void DropAllConstraints(SqlConnection conn)
+        {
+            List<KeyValuePair<string, string>> constraints = new List<KeyValuePair<string, string>>();
+            using (
+                SqlDataReader sqlDataReader =
+                    new SqlCommand(
+                        "SELECT CONCAT(OBJECT_SCHEMA_NAME(PARENT_OBJECT_ID), '.', OBJECT_NAME(PARENT_OBJECT_ID)), OBJECT_NAME(OBJECT_ID) FROM SYS.OBJECTS WHERE TYPE_DESC LIKE '%CONSTRAINT' AND NOT OBJECT_NAME(PARENT_OBJECT_ID) like 'TT_%' ORDER BY OBJECT_NAME(OBJECT_ID)",
+                        conn).ExecuteReader())
+            {
+                while (sqlDataReader.Read())
+                {
+                    constraints.Add(new KeyValuePair<string, string>(sqlDataReader.GetString(0), sqlDataReader.GetString(1)));
+                }
+            }
+
+            foreach (var constraint in constraints)
+            {
+                new SqlCommand($"ALTER TABLE {constraint.Key} DROP CONSTRAINT {constraint.Value};", conn).ExecuteNonQuery();
+            }
+        }
+
+        private static void DropAllUserDefinedTypes(SqlConnection conn)
+        {
+            List<string> types = new List<string>();
+            using (SqlDataReader sqlDataReader = new SqlCommand("SELECT name FROM SYS.types WHERE is_user_defined = 1", conn).ExecuteReader())
+            {
+                while (sqlDataReader.Read())
+                {
+                    types.Add(sqlDataReader.GetString(0));
+                }
+            }
+
+            foreach (var type in types)
+            {
+                new SqlCommand($"DROP TYPE {type};", conn).ExecuteNonQuery();
+            }
         }
     }
 }

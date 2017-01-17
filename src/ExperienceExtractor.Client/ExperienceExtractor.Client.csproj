@@ -46,26 +46,33 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Sitecore.Mvc">
-      <HintPath>..\components\Sitecore.Mvc.dll</HintPath>
+    <Reference Include="Sitecore.Mvc, Version=10.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sitecore.Mvc.NoReferences.8.2.161115\lib\NET452\Sitecore.Mvc.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Sitecore.Speak.Applications">
-      <HintPath>..\components\Sitecore.Speak.Applications.dll</HintPath>
+    <Reference Include="Sitecore.Speak.Applications, Version=10.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sitecore.Speak.Applications.NoReferences.8.2.161115\lib\NET452\Sitecore.Speak.Applications.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Sitecore.Speak.Charting">
-      <HintPath>..\components\Sitecore.Speak.Charting.dll</HintPath>
+    <Reference Include="Sitecore.Speak.Charting, Version=10.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sitecore.Speak.Charting.NoReferences.8.1.160519\lib\NET452\Sitecore.Speak.Charting.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Sitecore.Speak.Client">
-      <HintPath>..\components\Sitecore.Speak.Client.dll</HintPath>
+    <Reference Include="Sitecore.Speak.Client, Version=10.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sitecore.Speak.Client.NoReferences.8.2.161115\lib\NET452\Sitecore.Speak.Client.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Sitecore.Speak.ItemWebApi">
-      <HintPath>..\components\Sitecore.Speak.ItemWebApi.dll</HintPath>
+    <Reference Include="Sitecore.Speak.ItemWebApi, Version=10.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sitecore.Speak.ItemWebApi.NoReferences.8.2.161115\lib\NET452\Sitecore.Speak.ItemWebApi.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Sitecore.Speak.Mvc">
-      <HintPath>..\components\Sitecore.Speak.Mvc.dll</HintPath>
+    <Reference Include="Sitecore.Speak.Mvc, Version=10.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sitecore.Speak.Mvc.NoReferences.8.1.160519\lib\NET452\Sitecore.Speak.Mvc.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Sitecore.Speak.Web">
-      <HintPath>..\components\Sitecore.Speak.Web.dll</HintPath>
+    <Reference Include="Sitecore.Speak.Web, Version=10.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sitecore.Speak.Web.NoReferences.8.2.161115\lib\NET452\Sitecore.Speak.Web.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.DynamicData" />

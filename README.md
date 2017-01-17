@@ -56,9 +56,8 @@ By default only Sitecore administrators can use Experience Extractor. Specific r
 Please refer to `App_Config/Include/ExperienceExtractor/ExperienceExtractor.config` for details and other configuration options.
 
 ###Building from source
-Sitecore binaries are not part of this distribution. You need to copy your own version of these to the “components” folder in the solution's root folder. NuGet package restore is used.
-
-
+The solution uses the Sitecore MyGet feed (ensure that it is added to your NuGet package sources: https://doc.sitecore.net/sitecore_experience_platform/developing/developing_with_sitecore/sitecore_public_nuget_packages_faq).
+Please make sure that the packages reference the correct version when building for a specific Sitecore version.
 
 ##How to use
 Please refer to the [Wiki](https://github.com/Sitecore/experience-extractor/wiki/) for documentation on how to use Experience Extractor and examples.

@@ -35,31 +35,31 @@ Experience Extractor performs the necessary queries against Sitecore’s databas
 
 Experience Extractor is exposed through a RESTful API where jobs are specified in an extensible JSON format.
 
-##Compatibility
+## Compatibility
 Experience Extractor has been tested with Sitecore XP 8.0, 8.1 and 8.2.
 
 Experience Extractor requires direct access to Mongo DB and Sitecore's item database, and is currently not compatible with Sitecore xDB Cloud Service.
 
-##Installation
+## Installation
 Download and install [the package](https://github.com/Sitecore/experience-extractor/releases) on the server(s) where Experience Extractor will be available. 
 To verify the installation succeeded open the URL /sitecore/admin/experienceextractor/shell.aspx
 
-###xDB connection string
+### xDB connection string
 The connection string Experience Extractor uses to query MongoDB must be added to `App_Config/ConnectionString.config` before data can be extracted. The default name is "experienceextractor".
 
 In a test environment the connection string can simply be the same as “analytics”, but in a production environment Experience Extractor should not read data from the primary instances in a MongoDB cluster since this may degrade the performance of Sitecore's operational data store. 
 
 Instead, set up Experience Extractor to only read from secondary instances with `?readPreference=secondary` and optional tag preferences in the connection string. Please refer to the [MongoDB documentation](http://docs.mongodb.org/v2.6/core/read-preference/) or [this blog post](http://devops.com/blogs/mongodb-replication-pro-tips/) for details and implications.
 
-###Security
+### Security
 By default only Sitecore administrators can use Experience Extractor. Specific roles and users can be added in the configuration file.
 Please refer to `App_Config/Include/ExperienceExtractor/ExperienceExtractor.config` for details and other configuration options.
 
-###Building from source
+### Building from source
 The solution uses the Sitecore MyGet feed (ensure that it is added to your NuGet package sources: https://doc.sitecore.net/sitecore_experience_platform/developing/developing_with_sitecore/sitecore_public_nuget_packages_faq).
 Please make sure that the packages reference the correct version when building for a specific Sitecore version.
 
-##How to use
+## How to use
 Please refer to the [Wiki](https://github.com/Sitecore/experience-extractor/wiki/) for documentation on how to use Experience Extractor and examples.
 
 <img src="https://drive.google.com/uc?export=download&id=0B0Vm6WIFt16zdlM0dVQ2b3JxZkE&authuser=0" width="720" height="405" />
